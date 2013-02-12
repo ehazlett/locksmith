@@ -7,8 +7,11 @@ import datetime
 
 def index(request):
     ctx = {}
-    return render_to_response('index.html', ctx,
-        context_instance=RequestContext(request))
+    if request.user.is_authenticated():
+        return redirect(reverse('vault.views.index'))
+    else:
+        return render_to_response('index.html', ctx,
+            context_instance=RequestContext(request))
 
 def about(request):
     ctx = {}

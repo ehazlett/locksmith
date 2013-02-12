@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load bootstrap_tags %}
+
+{% block main_content %}
+<div class="toolbar">
+    <a href="{% url vault.views.add_credential_group %}" class="btn">{% trans 'Add Group' %}</a>
+</div>
+<div>
+    {% if credential_groups.all %}
+    <ul class="thumbnails">
+        {% for group in credential_groups.all %}
+        <li class="span2 group">
+            <a href="{% url vault.group uuid=group.uuid %}" class="thumbnail">
+                <div class="entypo large">&#128196;</div>
+                <div class="caption">
+                    <h3>{{group.name}}</h3>
+                </div>
+            </a>
+        </li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+</div>
+{% endblock %}

@@ -243,8 +243,10 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     'social_auth',
     'django_forms_bootstrap',
+    'south',
     'locksmith',
     'accounts',
+    'vault',
 )
 
 # A sample logging configuration. The only tangible logging

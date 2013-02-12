@@ -9,6 +9,7 @@ urlpatterns = patterns('',
     url(r'^about/$', 'locksmith.views.about', name='about'),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^accounts/', include('accounts.urls')),
+    url(r'^vault/', include('vault.urls')),
     url(r'', include('social_auth.urls')),
 )
 

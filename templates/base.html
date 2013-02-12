@@ -29,18 +29,40 @@
   {% block extra_head_js %}{% endblock %}
 </head>
 <body>
-  <div id="messages" {% if not messages %}class="hide"{% endif %}>
-    {% if messages %}
-    {% for message in messages %}
-    <div class="alert {% if message.tags %}alert-{{message.tags}}{% endif %}">
-      <a class="close" href="#" data-dismiss="alert">x</a>
-      <p>{{message}}<p>
-      </div>
-      {% endfor %}
-      <script type="text/javascript">
-      $(".alert").delay(5000).fadeOut();
-      </script>
-      {% endif %}
+    {% if request.user.is_authenticated and not request.session.key %}
+    <div id="dialog-key" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="dialog-key-label" aria-hidden="true">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h3 id="dialog-key-label">{% trans 'Encryption Key' %}</h3>
+        </div>
+        <div class="modal-body">
+            <p class="lead">
+                {% blocktrans %}Please enter your encryption key.  This will 
+                be stored temporarily in your current session and removed
+                when you close this tab / window.{% endblocktrans %}
+            </p>
+            <form id="form-key" class="form-inline">
+                {% csrf_token %}
+                <input type="password" class="input-large search-query" placeholder="{% trans 'key' %}..." />
+            </form>
+        </div>
+        <div class="modal-footer">
+            <a href="#" id="btn-save-key" class="btn btn-primary">{% trans 'Save' %}</a>
+        </div>
+    </div>
+    {% endif %}
+    <div id="messages" {% if not messages %}class="hide"{% endif %}>
+      {% if messages %}
+      {% for message in messages %}
+      <div class="alert {% if message.tags %}alert-{{message.tags}}{% endif %}">
+        <a class="close" href="#" data-dismiss="alert">x</a>
+        <p>{{message}}<p>
+        </div>
+        {% endfor %}
+        <script type="text/javascript">
+        $(".alert").delay(5000).fadeOut();
+        </script>
+        {% endif %}
     </div>
     <div class="navbar navbar-fixed-top">
       <div class="navbar-inner">
@@ -83,29 +105,38 @@
     <!-- scripts -->
     <script type="text/javascript" src="{{STATIC_URL}}js/bootstrap.min.js"></script>
     <script type="text/javascript" src="{{STATIC_URL}}js/app.js"></script>
+    <script type="text/javascript" src="{{STATIC_URL}}js/holder.js"></script>
     {% block extra_js %}{% endblock %}
     <script type="text/javascript">
     $("a[data-toggle='tab']").on('shown', function(e) {
       localStorage.setItem('lastTab', $(e.target).attr('href'));
     });
+    $("a#btn-save-key").click(function() {
+        var data = $("#form-key").serialize();
+        $("#dialog-key").modal('hide');
+        return false;
+    });
     $(function(){
-      $("a[rel=tooltip]").tooltip();
-      $("a[rel=popover]").popover();
-      {% if messages %}
-      $(".alert").alert();
-      {% endif %}
-      // select last tab (for bootstrap active tab persistence)
-      var lastTab = localStorage.getItem('lastTab');
-      if (lastTab) {
-        // only select if element exists ; otherwise clear localStorage
-        // to prevent loading in other page
-        var el = $("#nav-tabs a[href='"+lastTab+"']");
-        if (el.length) {
-          $(el).tab('show');
-        } else {
-          localStorage.removeItem('lastTab');
+        {% if not request.session.key %}
+        $("#dialog-key").modal('show');
+        {% endif %}
+        $("a[rel=tooltip]").tooltip();
+        $("a[rel=popover]").popover();
+        {% if messages %}
+        $(".alert").alert();
+        {% endif %}
+        // select last tab (for bootstrap active tab persistence)
+        var lastTab = localStorage.getItem('lastTab');
+        if (lastTab) {
+            // only select if element exists ; otherwise clear localStorage
+            // to prevent loading in other page
+            var el = $("#nav-tabs a[href='"+lastTab+"']");
+            if (el.length) {
+                $(el).tab('show');
+            } else {
+                localStorage.removeItem('lastTab');
+            }
         }
-      }
     });
     </script>
     {% if GOOGLE_ANALYTICS_CODE %}
