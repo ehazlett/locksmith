@@ -1,0 +1,8 @@
+*.pyc
+*.sw*
+*.un*
+*.db
+local_settings.py
+*.log
+newrelic.ini
+*DS_Store*

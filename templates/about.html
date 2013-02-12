@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block main_content %}
+<div class="about">
+  <div class="container">
+    <h2>{% trans "What is Locksmith?" %}</h2>
+    <p>{% blocktrans %}Locksmith is a password storage service.  We all have many accounts across
+    many services.  We wanted a simple, secure way to store the account credentials
+    with an easy way to retrieve them.{% endblocktrans %}
+    </p>
+
+    <h2>{% trans "How secure is it?" %}</h2>
+    <p>{% blocktrans %}We take security at the highest priority.  Locksmith takes a slightly
+    different approach from that of a typical web service.  Most services will
+    encrypt or hash your password so in the event that it is compromised, it is not
+    easily readable.  However, they will typically use a single, unique key to 
+    encrypt all data.  With Locksmith, we do the same type of encryption however,
+    every single user also has a unique &quot;key&quot; that is used as an additional
+    randomizer (salt) during encryption.  What this means is that even if your data
+    is compromised, which we take great measure to prevent, every single user&apos;s 
+    data is completely unique making it even more difficult to decrypt.{% endblocktrans %}
+    </p>
+
+    <h2>{% trans "How much does it cost?" %}</h2>
+    <p>{% trans "We wanted to keep it simple.  Locksmith is $12 per year." %}</p>
+    
+    <p>{% blocktrans %}Other services have more features (that
+    are not necessarily better, etc.) and cost significantly more.  With Locksmith,
+    there are no gimmicks, no &quot;plans&quot; - everyone gets the same service
+    and continous updates.{% endblocktrans %}
+    </p>
+
+    <h2>{% trans "Any mobile apps?" %}</h2>
+    <p>{% trans "In the works.  Stay tuned!" %}</p>
+    
+    <h2>{% trans "Why Open Source?" %}</h2>
+    <p>{% blocktrans %}First of all, we love open source.  We try to commit as much as we
+    can back to the open source community.  Second, we believe that making
+    Locksmith open source allows for community review and improvement.  We feel
+    this is especially important since our application contains your private data.{% endblocktrans %}
+    </p>
+  </div>
+</div>
+{% endblock %}
