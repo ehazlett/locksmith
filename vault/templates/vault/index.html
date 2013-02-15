@@ -3,8 +3,32 @@
 {% load bootstrap_tags %}
 
 {% block main_content %}
-<div class="toolbar">
-    <a href="{% url vault.views.add_credential_group %}" class="btn">{% trans 'Add Group' %}</a>
+<div id="dialog-add-group" class="modal hide" tabindex="-1" role="dialog" aria-labelledby="dialog-key-label" aria-hidden="true">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h3 id="dialog-key-label">{% trans 'Add Group' %}</h3>
+    </div>
+    <div class="modal-body">
+        <form id="form-add-group">
+            <div class="control-group">
+                 <label class="control-label" for="inputName">{% trans 'Name' %}</label>
+                 <div class="controls">
+                   <input type="text" id="inputName" name="name" class="required" />
+                 </div>
+                 <label class="control-label" for="description">{% trans 'Description' %}</label>
+                 <div class="controls">
+                   <textarea id="description" name="description"></textarea>
+                 </div>
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <a href="#" id="btn-create-group" class="btn btn-primary">{% trans 'Create' %}</a>
+    </div>
+</div>
+
+<div class="toolbar pull-right">
+    <a href="#dialog-add-group" class="btn" role="button" data-toggle="modal">{% trans 'Add Group' %}</a>
 </div>
 <div>
     {% if credential_groups.all %}
@@ -22,4 +46,18 @@
     </ul>
     {% endif %}
 </div>
+<script type="text/javascript">
+    $("#btn-create-group").click(function() {
+        var data = $("#form-add-group").serializeObject();
+        if ($("#form-add-group").valid()) {
+            createCredentialGroup(data, function(res) {
+                redirect("{% url index %}");
+                return false;
+            });
+        }
+    });
+    $(function() {
+        $("form-add-group").validate();
+    });
+</script>
 {% endblock %}

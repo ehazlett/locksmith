@@ -244,6 +244,7 @@ INSTALLED_APPS = (
     'social_auth',
     'django_forms_bootstrap',
     'south',
+    'tastypie',
     'locksmith',
     'accounts',
     'vault',

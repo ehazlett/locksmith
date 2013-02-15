@@ -2,6 +2,24 @@
 {% load i18n %}
 
 {% block main_content %}
+<div class="toolbar pull-right">
+    <a href="#" class="btn">{% trans 'Add Credential' %}</a>
+</div>
 <div class="group title">{{group.name}}</div>
-<p class="lead">{{group.description}}</p>
+<p class="muted">{{group.description|default:""}}</p>
+{% with credentials=group.get_credentials %}
+{% if credentials %}
+<ul class="thumbnails">
+    {% for cred in credentials %}
+    <li class="span6">
+        <a href="#" class="thumbnail">
+            <img src="holder.js/650x200" alt="" />
+        </a>
+    </li>
+    {% endfor %}
+</ul>
+{% else %}
+<p class="lead muted">{% trans 'No credentials' %}</p>
+{% endif %}
+{% endwith %}
 {% endblock %}

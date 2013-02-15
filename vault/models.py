@@ -18,6 +18,9 @@ class CredentialGroup(models.Model):
     def __unicode__(self):
         return '{0}: {1}'.format(self.owner.username, self.name)
 
+    def get_credentials(self):
+        return Credential.objects.filter(groups__in=[self])
+
 class Credential(models.Model):
     uuid = models.CharField(max_length=36, blank=True, null=True,
         default=generate_uuid)

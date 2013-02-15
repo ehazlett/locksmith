@@ -9,6 +9,11 @@ function flash(text, status){
   $(".alert").delay(5000).fadeOut();
 }
 
+function redirect(url) {
+    window.location.href = url;
+    return false;
+}
+
 jQuery.fn.serializeObject = function() {
   var arrayData, objectData;
   arrayData = this.serializeArray();
@@ -31,3 +36,22 @@ jQuery.fn.serializeObject = function() {
   });
   return objectData;
 };
+
+// TODO: redesign this
+// api
+var API_URL = '/api/v1/';
+function createCredentialGroup(options, callback) {
+    var opt = options || {};
+    var data = {
+        name: opt.name
+    }
+    var cb = callback || function(){};
+    $.ajax({
+        url: API_URL + 'credentialgroups/',
+        data: JSON.stringify(data),
+        type: "POST",
+        dataType: "application/json",
+        contentType: "application/json",
+        complete: function(xhr) { cb(xhr); }
+    });
+}

@@ -36,15 +36,16 @@
             <h3 id="dialog-key-label">{% trans 'Encryption Key' %}</h3>
         </div>
         <div class="modal-body">
-            <p class="lead">
+            <form id="form-key" class="form-inline" action="{% url vault.views.set_key %}" method="post">
+                {% csrf_token %}
+                <input id="encryption-key" type="password" name="key" class="input-large search-query required" placeholder="{% trans 'key' %}..." />
+            </form>
+            <p class="muted">
                 {% blocktrans %}Please enter your encryption key.  This will 
                 be stored temporarily in your current session and removed
-                when you close this tab / window.{% endblocktrans %}
+                when you close this tab / window or logout.  This is the only
+                way to decrypt your data.{% endblocktrans %}
             </p>
-            <form id="form-key" class="form-inline">
-                {% csrf_token %}
-                <input type="password" class="input-large search-query" placeholder="{% trans 'key' %}..." />
-            </form>
         </div>
         <div class="modal-footer">
             <a href="#" id="btn-save-key" class="btn btn-primary">{% trans 'Save' %}</a>
@@ -114,11 +115,14 @@
     $("a#btn-save-key").click(function() {
         var data = $("#form-key").serialize();
         $("#dialog-key").modal('hide');
+        $("#form-key").submit();
         return false;
     });
     $(function(){
         {% if not request.session.key %}
         $("#dialog-key").modal('show');
+        $("#form-key").validate();
+        $("#encryption-key").focus();
         {% endif %}
         $("a[rel=tooltip]").tooltip();
         $("a[rel=popover]").popover();

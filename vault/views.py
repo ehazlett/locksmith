@@ -1,6 +1,7 @@
 from django.shortcuts import redirect, render_to_response
 from django.template import RequestContext
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.http import require_http_methods
 from django.http import HttpResponse
 from django.utils.translation import ugettext as _
 from django.core.urlresolvers import reverse
@@ -17,25 +18,16 @@ def index(request):
         context_instance=RequestContext(request))
 
 @login_required
-def add_credential_group(request):
-    ctx = {}
-    form = CredentialGroupForm()
-    if request.method == 'POST':
-        form = CredentialGroupForm(request.POST)
-        if form.is_valid():
-            i = form.save(commit=False)
-            i.owner = request.user
-            i.save()
-            messages.info(request, _('Group created.'))
-            return redirect(reverse('index'))
-    ctx['form'] = form
-    return render_to_response('vault/add_credential_group.html', ctx,
-        context_instance=RequestContext(request))
-
-@login_required
 def group(request, uuid=None):
     ctx = {}
     group = CredentialGroup.objects.get(uuid=uuid)
     ctx['group'] = group
     return render_to_response('vault/group.html', ctx,
         context_instance=RequestContext(request))
+
+@login_required
+@require_http_methods(["POST"])
+def set_key(request):
+    key = request.POST.get('key')
+    request.session['key'] = key
+    return redirect(reverse('index'))
