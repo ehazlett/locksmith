@@ -204,3 +204,8 @@ div.group.title {
   font-size: 24px;
   color: #7a7a7a;
 }
+div.social-auth {
+  width: 25%;
+  margin: 30px auto 0 auto;
+  text-align: center;
+}

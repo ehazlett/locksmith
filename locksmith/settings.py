@@ -117,6 +117,9 @@ YAHOO_CONSUMER_KEY           = ''
 YAHOO_CONSUMER_SECRET        = ''
 READABILITY_CONSUMER_SECRET  = ''
 READABILITY_CONSUMER_SECRET  = ''
+GITHUB_APP_ID                = ''
+GITHUB_API_SECRET            = ''
+GITHUB_EXTENDED_PERMISSIONS = ['user', 'user:email']
 
 # more social auth settings
 #LOGIN_URL = '/login-form/'

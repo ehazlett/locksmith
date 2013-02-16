@@ -16,12 +16,10 @@
       <a href="#" class="btn btn-large">{% trans 'Signup' %}</a>
     </div>
   </form>
-  <div class="well">
-    <a href="{% url socialauth_begin 'twitter' %}" class="entypo-social" rel="tooltip" title="{{_('Login with Twitter')}}">&#62218;</a>
-    <a href="{% url socialauth_begin 'google-oauth2' %}" class="entypo-social" rel="tooltip" title="{{_('Login with Google')}}">&#62224;</a>
-    {% comment %}
+  <div class="social-auth">
     <a href="{% url socialauth_begin 'github' %}" class="entypo-social" rel="tooltip" title="{{_('Login with Github')}}">&#62209;</a>
-    {% endcomment %}
+    <a href="{% url socialauth_begin 'google-oauth2' %}" class="entypo-social" rel="tooltip" title="{{_('Login with Google')}}">&#62224;</a>
+    <a href="{% url socialauth_begin 'twitter' %}" class="entypo-social" rel="tooltip" title="{{_('Login with Twitter')}}">&#62218;</a>
   </div>
 </div>
 <script type="text/javascript">

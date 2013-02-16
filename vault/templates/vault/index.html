@@ -44,6 +44,8 @@
         </li>
         {% endfor %}
     </ul>
+    {% else %}
+    <p class="lead muted">{% trans 'No groups' %}</p>
     {% endif %}
 </div>
 <script type="text/javascript">

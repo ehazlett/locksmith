@@ -55,3 +55,14 @@ function createCredentialGroup(options, callback) {
         complete: function(xhr) { cb(xhr); }
     });
 }
+function deleteCredentialGroup(uuid, callback) {
+    var data = {
+        uuid: uuid,
+    }
+    var cb = callback || function(){};
+    $.ajax({
+        url: API_URL + 'credentialgroups/' + uuid + '/',
+        type: "DELETE",
+        complete: function(xhr) { cb(xhr); }
+    });
+}

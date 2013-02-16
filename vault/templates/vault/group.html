@@ -4,6 +4,7 @@
 {% block main_content %}
 <div class="toolbar pull-right">
     <a href="#" class="btn">{% trans 'Add Credential' %}</a>
+    <a id="btn-delete-group" href="#" class="btn btn-danger">{% trans 'Delete Group' %}</a>
 </div>
 <div class="group title">{{group.name}}</div>
 <p class="muted">{{group.description|default:""}}</p>
@@ -22,4 +23,13 @@
 <p class="lead muted">{% trans 'No credentials' %}</p>
 {% endif %}
 {% endwith %}
+<script type="text/javascript">
+    $("a#btn-delete-group").click(function() {
+        if (confirm("{% trans 'Delete group?  This is irreversible.' %}")) {
+            deleteCredentialGroup('{{group.uuid}}', function(res) {
+                redirect("{% url index %}");
+            });
+        }
+    });
+</script>
 {% endblock %}
