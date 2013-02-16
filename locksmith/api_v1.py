@@ -22,6 +22,11 @@ import os
 def api_login(request):
     username = request.POST.get('username')
     password = request.POST.get('password')
+    if not username:
+        # attempt to parse a json string
+        data = json.loads(request.body)
+        username = data.get('username')
+        password = data.get('password')
     user = authenticate(username=username, password=password)
     code = 200
     if user is not None:
