@@ -1,39 +1,5 @@
 # coding: utf-8
 # Copied from https://github.com/jedie/django-tools/blob/master/django_tools/middlewares/ThreadLocal.py
-
-"""
-    threadlocals middleware
-    ~~~~~~~~~~~~~~~~~~~~~~~
-
-    make the request object everywhere available (e.g. in model instance). 
-
-    based on: http://code.djangoproject.com/wiki/CookBookThreadlocalsAndUser
-    
-    Put this into your settings:   
-    --------------------------------------------------------------------------
-        MIDDLEWARE_CLASSES = (
-            ...
-            'django_tools.middlewares.ThreadLocal.ThreadLocalMiddleware',
-            ...
-        )
-    --------------------------------------------------------------------------
-    
-    
-    Usage:
-    --------------------------------------------------------------------------
-    from django_tools.middlewares import ThreadLocal
-    
-    # Get the current request object:
-    request = ThreadLocal.get_current_request()
-    
-    # You can get the current user directy with:
-    user = ThreadLocal.get_current_user()
-    --------------------------------------------------------------------------
-
-    :copyleft: 2009-2011 by the django-tools team, see AUTHORS for more details.
-    :license: GNU GPL v3 or above, see LICENSE for more details.
-"""
-
 try:
     from threading import local
 except ImportError:
