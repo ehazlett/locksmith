@@ -188,6 +188,9 @@ class CredentialResource(ModelResource):
 
     def dehydrate(self, bundle):
         # add categories
-        bundle.data['password'] = decrypt(bundle.data['password'],
-            bundle.request.session.get('key'))
+        try:
+            bundle.data['password'] = decrypt(bundle.data['password'],
+                bundle.request.session.get('key'))
+        except:
+            bundle.data['password'] = None
         return bundle

@@ -1,5 +1,6 @@
 import hashlib
 from Crypto.Cipher import AES
+from django.utils.translation import ugettext as _
 import base64
 from django.conf import settings
 
@@ -50,5 +51,5 @@ def decrypt(data=None, key=None):
     try:
         unicode(dec)
     except:
-        dec = gettext('Invalid Key')
+        dec = ''
     return dec

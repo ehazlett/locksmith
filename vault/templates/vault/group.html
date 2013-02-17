@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load i18n %}
+{% load locksmith %}
 
 {% block main_content %}
 <div id="dialog-credential" class="modal hide" tabindex="-1" role="dialog" aria-labelledby="dialog-key-label" aria-hidden="true">
@@ -70,7 +71,8 @@
                 <label class="control-label" for="password">{% trans 'Password / Key' %}</label>
                 <div class="controls">
                     <div class="input-append">
-                      <input id="credential-password" class="span3" type="password">
+                      <input id="credential-password" class="span2" type="password" />
+                      <a href="#" id="btn-show-credential" class="btn">{% trans 'Show' %}</a>
                       <button class="btn clipboard" data-clipboard-target="credential-password" type="button">{% trans 'Copy' %}</button>
                     </div>
                 </div>
@@ -109,12 +111,27 @@
 {% endif %}
 {% endwith %}
 <script type="text/javascript">
+    $("a#btn-show-credential").click(function() {
+        var el = $("#credential-password");
+        var t = el.prop('type');
+        switch (t) {
+            case "text":
+                $(this).text("{% trans 'Show' %}");
+                $("#credential-password").prop('type', 'password');
+                break;
+            case "password":
+                $(this).text("{% trans 'Hide' %}");
+                $("#credential-password").prop('type', 'text');
+                break;
+        }
+        return false;
+    });
     $("a.credential").click(function(e) {
         var clip = new ZeroClipboard($(".clipboard"), {
             moviePath: "/static/libs/zc.swf"
         });
         clip.on('complete', function(client, args) {
-            $("#credential-status").text("{% trans 'Copied...' %}");
+            $("#credential-status").text("{% trans 'Copied to clipboard...' %}");
             $("#credential-status").delay(3000).fadeOut(100);
             $("#credential-status").focus();
         });
