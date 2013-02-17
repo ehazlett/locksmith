@@ -14,6 +14,7 @@ from django.views.decorators.csrf import csrf_exempt
 from vault.models import CredentialGroup, Credential
 from tastypie.models import ApiKey
 from tastypie.constants import ALL, ALL_WITH_RELATIONS
+from utils.encryption import decrypt
 import simplejson as json
 import os
 
@@ -185,3 +186,8 @@ class CredentialResource(ModelResource):
 
         return self._build_reverse_url('api_dispatch_detail', kwargs = kwargs)
 
+    def dehydrate(self, bundle):
+        # add categories
+        bundle.data['password'] = decrypt(bundle.data['password'],
+            bundle.request.session.get('key'))
+        return bundle

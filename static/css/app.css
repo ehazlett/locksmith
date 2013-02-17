@@ -187,7 +187,7 @@ div.dashboard {
   margin: 0 auto 0 auto;
 }
 div.toolbar {
-  margin: 0 0 25px 0;
+  margin: 0 0 10px 0;
 }
 div.caption {
   text-align: center;
@@ -208,4 +208,10 @@ div.social-auth {
   width: 25%;
   margin: 30px auto 0 auto;
   text-align: center;
+}
+span#credential-status {
+  margin-left: 20px;
+}
+div.credentials {
+  margin: 25px 0 0 0;
 }

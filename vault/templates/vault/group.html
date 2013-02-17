@@ -2,34 +2,156 @@
 {% load i18n %}
 
 {% block main_content %}
+<div id="dialog-credential" class="modal hide" tabindex="-1" role="dialog" aria-labelledby="dialog-key-label" aria-hidden="true">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h3 id="dialog-key-label">{% trans 'Credential' %}</h3>
+    </div>
+    <div class="modal-body">
+        <form id="form-credential" class="form-horizontal">
+            <div class="control-group">
+                <label class="control-label" for="name">{% trans 'Name' %}</label>
+                <div class="controls">
+                  <input id="name" type="text" name="name" class="required" />
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label" for="description">{% trans 'Description' %}</label>
+                <div class="controls">
+                    <textarea name="description"></textarea>
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label" for="url">{% trans 'URL' %}</label>
+                <div class="controls">
+                  <input id="url" type="text" name="url" />
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label" for="username">{% trans 'Username' %}</label>
+                <div class="controls">
+                  <input id="username" type="text" name="username" class="required" />
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label" for="password">{% trans 'Password / Key' %}</label>
+                <div class="controls">
+                  <input id="password" type="password" name="password" class="required" />
+                </div>
+            </div>
+            <input type="hidden" name="groupUUID" value="{{group.uuid}}"/>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <a href="#" id="btn-save" class="btn btn-primary">{% trans 'Save' %}</a>
+        <a href="#" class="btn" data-dismiss="modal">{% trans 'Cancel' %}</a>
+    </div>
+</div>
+<div id="dialog-show-credential" class="modal hide">
+    <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+          <h3 id="dialog-credential-title">&nbsp;</h3>
+    </div>
+    <div class="modal-body">
+        <form id="form-show-credential" class="form-horizontal">
+            <div class="control-group">
+                <label class="control-label" for="password">{% trans 'Name' %}</label>
+                <div class="controls">
+                    <input id="credential-name" class="span2" name="name" type="text" />
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label" for="password">{% trans 'URL' %}</label>
+                <div class="controls">
+                    <input id="credential-url" class="span3" name="url" type="text" />
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label" for="password">{% trans 'Password / Key' %}</label>
+                <div class="controls">
+                    <div class="input-append">
+                      <input id="credential-password" class="span3" type="password">
+                      <button class="btn clipboard" data-clipboard-target="credential-password" type="button">{% trans 'Copy' %}</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <span id="credential-status" class="pull-left text-success">&nbsp;</span>
+        <a href="#" class="btn" data-dismiss="modal">{% trans 'Close' %}</a>
+    </div>
+</div>
 <div class="toolbar pull-right">
-    <a href="#" class="btn">{% trans 'Add Credential' %}</a>
+    <a id="btn-add-credential" href="#dialog-credential" role="button" data-toggle="modal" class="btn">{% trans 'Add Credential' %}</a>
     <a id="btn-delete-group" href="#" class="btn btn-danger">{% trans 'Delete Group' %}</a>
 </div>
 <div class="group title">{{group.name}}</div>
 <p class="muted">{{group.description|default:""}}</p>
-{% with credentials=group.get_credentials %}
-{% if credentials %}
-<ul class="thumbnails">
-    {% for cred in credentials %}
-    <li class="span6">
-        <a href="#" class="thumbnail">
-            <img src="holder.js/650x200" alt="" />
-        </a>
-    </li>
-    {% endfor %}
-</ul>
+<div class="credentials">
+    {% with credentials=group.get_credentials %}
+    {% if credentials %}
+    <ul class="thumbnails">
+        {% for cred in credentials %}
+        <li class="span2">
+            <a href="#" class="thumbnail credential" data-name="{{cred.name}}" data-uuid="{{cred.uuid}}">
+                <img src="holder.js/150x100" alt="" />
+                <div class="caption">
+                    <p>{{cred.name}}</p>
+                </div>
+            </a>
+        </li>
+        {% endfor %}
+    </ul>
+</div>
 {% else %}
 <p class="lead muted">{% trans 'No credentials' %}</p>
 {% endif %}
 {% endwith %}
 <script type="text/javascript">
+    $("a.credential").click(function(e) {
+        var clip = new ZeroClipboard($(".clipboard"), {
+            moviePath: "/static/libs/zc.swf"
+        });
+        clip.on('complete', function(client, args) {
+            $("#credential-status").text("{% trans 'Copied...' %}");
+            $("#credential-status").delay(3000).fadeOut(100);
+            $("#credential-status").focus();
+        });
+        var name = $(this).attr('data-name');
+        var uuid = $(this).attr('data-uuid');
+        // set dialog title
+        $("#dialog-credential-title").text(name);
+        // disable
+        $("#form-show-credential input").val('');
+        $("#form-show-credential input").prop('readonly', true);
+        $("#form-show-credential input").prop('placeholder', 'loading...');
+
+        // load data
+        $("#dialog-show-credential").modal('show');
+        getCredential(uuid, function(data, xhr) {
+            $("#credential-name").val(data.name);
+            $("#credential-url").val(data.url);
+            $("#credential-password").val(data.password);
+        });
+        return false;
+    });
+    $("a#btn-save").click(function() {
+        if ($("#form-credential").valid()) {
+            createCredential($("#form-credential").serializeObject(), function(res) {
+                redirect("{% url vault.views.group uuid=group.uuid %}");
+            });
+        }
+    });
     $("a#btn-delete-group").click(function() {
         if (confirm("{% trans 'Delete group?  This is irreversible.' %}")) {
             deleteCredentialGroup('{{group.uuid}}', function(res) {
                 redirect("{% url index %}");
             });
         }
+    });
+    $(function(){
+        $("form#form-credential").validate();
     });
 </script>
 {% endblock %}

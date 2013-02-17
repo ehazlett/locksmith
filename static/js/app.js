@@ -52,17 +52,51 @@ function createCredentialGroup(options, callback) {
         type: "POST",
         dataType: "application/json",
         contentType: "application/json",
-        complete: function(xhr) { cb(xhr); }
+        complete: function(xhr) {
+            cb(xhr);
+        }
     });
 }
 function deleteCredentialGroup(uuid, callback) {
-    var data = {
-        uuid: uuid,
-    }
     var cb = callback || function(){};
     $.ajax({
         url: API_URL + 'credentialgroups/' + uuid + '/',
         type: "DELETE",
-        complete: function(xhr) { cb(xhr); }
+        complete: function(xhr) {
+            cb(xhr);
+        }
+    });
+}
+function createCredential(options, callback) {
+    var opt = options || {};
+    var data = {
+        name: opt.name,
+        description: opt.description,
+        url: opt.url,
+        username: opt.username,
+        password: opt.password,
+        groups: [API_URL + "credentialgroups/" + opt.groupUUID + "/"]
+    }
+    var cb = callback || function(){};
+    $.ajax({
+        url: API_URL + 'credentials/',
+        data: JSON.stringify(data),
+        type: "POST",
+        dataType: "application/json",
+        contentType: "application/json",
+        complete: function(xhr) {
+            cb(xhr);
+        }
+    });
+}
+function getCredential(uuid, callback) {
+    var cb = callback || function(){};
+    $.ajax({
+        url: API_URL + 'credentials/' + uuid + '/',
+        type: "GET",
+        complete: function(xhr) {
+            var data = JSON.parse(xhr.responseText);
+            cb(data, xhr);
+        }
     });
 }
