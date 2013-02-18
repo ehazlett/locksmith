@@ -149,11 +149,10 @@ class CredentialGroupResource(ModelResource):
     #        kwargs['api_name'] = self._meta.api_name
     #    return self._build_reverse_url('api_dispatch_detail', kwargs = kwargs)
 
-    def obj_create(self, bundle, request, **kwargs):
+    def obj_create(self, bundle, **kwargs):
         # set the owner
-        kwargs['owner'] = request.user
-        return super(CredentialGroupResource, self).obj_create(bundle, request,
-            **kwargs)
+        kwargs['owner'] = bundle.request.user
+        return super(CredentialGroupResource, self).obj_create(bundle, **kwargs)
 
 class CredentialResource(ModelResource):
     groups = fields.ToManyField(CredentialGroupResource, 'groups', full=True)
