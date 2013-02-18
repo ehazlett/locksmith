@@ -5,6 +5,8 @@ from django.views.decorators.http import require_http_methods
 from django.http import HttpResponse
 from django.utils.translation import ugettext as _
 from django.core.urlresolvers import reverse
+from django.core.cache import cache
+from django.conf import settings
 from django.contrib import messages
 from vault.models import CredentialGroup, Credential
 from vault.forms import CredentialGroupForm
@@ -29,5 +31,7 @@ def group(request, uuid=None):
 @require_http_methods(["POST"])
 def set_key(request):
     key = request.POST.get('key')
-    request.session['key'] = key
+    u = request.user
+    cache.set(settings.CACHE_ENCRYPTION_KEY.format(u.username), key,
+        timeout=u.get_profile().encryption_key_timeout)
     return redirect(reverse('index'))
