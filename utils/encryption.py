@@ -24,6 +24,13 @@ def get_user_encryption_key(username=None):
     """
     return cache.get(settings.CACHE_ENCRYPTION_KEY.format(username))
 
+def clear_user_encryption_key(username=None):
+    """
+    Clears the encryption key for the specified user
+
+    """
+    cache.delete(settings.CACHE_ENCRYPTION_KEY.format(username))
+
 def hash_text(text):
     """
     Hashes text with app key
