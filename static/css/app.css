@@ -215,3 +215,14 @@ span#credential-status {
 div.credentials {
   margin: 25px 0 0 0;
 }
+a.thumbnail {
+  color: #8e8e8e;
+}
+a.thumbnail:hover {
+  color: #cacaca;
+}
+a.thumbnail > div.entypo {
+  margin: 10px 0 10px 0;
+  font-size: 72px;
+  text-align: center;
+}

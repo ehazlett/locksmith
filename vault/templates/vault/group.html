@@ -55,6 +55,7 @@
     </div>
     <div class="modal-body">
         <form id="form-show-credential" class="form-horizontal">
+            <input id="credential-uuid" class="span2" type="hidden" />
             <div class="control-group">
                 <label class="control-label" for="password">{% trans 'Name' %}</label>
                 <div class="controls">
@@ -65,6 +66,12 @@
                 <label class="control-label" for="password">{% trans 'URL' %}</label>
                 <div class="controls">
                     <input id="credential-url" class="span3" name="url" type="text" />
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label" for="username">{% trans 'Username' %}</label>
+                <div class="controls">
+                    <input id="credential-username" class="span2" name="username" type="text" />
                 </div>
             </div>
             <div class="control-group">
@@ -80,6 +87,7 @@
         </form>
     </div>
     <div class="modal-footer">
+        <a id="btn-delete-credential" href="#" class="btn btn-danger pull-left">{% trans 'Delete' %}</a>
         <span id="credential-status" class="pull-left text-success">&nbsp;</span>
         <a href="#" class="btn" data-dismiss="modal">{% trans 'Close' %}</a>
     </div>
@@ -97,7 +105,7 @@
         {% for cred in credentials %}
         <li class="span2">
             <a href="#" class="thumbnail credential" data-name="{{cred.name}}" data-uuid="{{cred.uuid}}">
-                <img src="holder.js/150x100" alt="" />
+                <div class="entypo">{% if cred.url %}&#59254;{% else %}&#128274;{% endif %}</div>
                 <div class="caption">
                     <p>{{cred.name}}</p>
                 </div>
@@ -126,6 +134,15 @@
         }
         return false;
     });
+    $("a#btn-delete-credential").click(function() {
+        var uuid = $("#credential-uuid").val();
+        if (confirm("{% trans 'Delete credential?  This is irreversible.' %}")) {
+            deleteCredential(uuid, function(res) {
+                redirect("{% url index %}");
+            });
+        }
+        return false;
+    });
     $("a.credential").click(function(e) {
         var clip = new ZeroClipboard($(".clipboard"), {
             moviePath: "/static/libs/zc.swf"
@@ -147,8 +164,11 @@
         // load data
         $("#dialog-show-credential").modal('show');
         getCredential(uuid, function(data, xhr) {
+            $("#credential-uuid").val(data.uuid);
             $("#credential-name").val(data.name);
+            $("#credential-username").val(data.username);
             $("#credential-url").val(data.url);
+            $("#credential-url").prop('placeholder', '');
             $("#credential-password").val(data.password);
         });
         return false;

@@ -100,3 +100,13 @@ function getCredential(uuid, callback) {
         }
     });
 }
+function deleteCredential(uuid, callback) {
+    var cb = callback || function(){};
+    $.ajax({
+        url: API_URL + 'credentials/' + uuid + '/',
+        type: "DELETE",
+        complete: function(xhr) {
+            cb(xhr);
+        }
+    });
+}
