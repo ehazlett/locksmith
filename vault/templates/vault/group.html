@@ -55,11 +55,17 @@
     </div>
     <div class="modal-body">
         <form id="form-show-credential" class="form-horizontal">
-            <input id="credential-uuid" class="span2" type="hidden" />
+            <input id="credential-uuid" name="uuid" class="span2" type="hidden" />
             <div class="control-group">
-                <label class="control-label" for="password">{% trans 'Name' %}</label>
+                <label class="control-label" for="name">{% trans 'Name' %}</label>
                 <div class="controls">
                     <input id="credential-name" class="span2" name="name" type="text" />
+                </div>
+            </div>
+            <div class="control-group hide">
+                <label class="control-label" for="description">{% trans 'Description' %}</label>
+                <div class="controls">
+                    <textarea id="credential-description" name="description"></textarea>
                 </div>
             </div>
             <div class="control-group">
@@ -78,23 +84,27 @@
                 <label class="control-label" for="password">{% trans 'Password / Key' %}</label>
                 <div class="controls">
                     <div class="input-append">
-                      <input id="credential-password" class="span2" type="password" />
-                      <a href="#" id="btn-show-credential" class="btn">{% trans 'Show' %}</a>
-                      <button class="btn clipboard" data-clipboard-target="credential-password" type="button">{% trans 'Copy' %}</button>
+                        <input id="credential-password" name="password" class="span2" type="password" />
+                        <a href="#" id="btn-show-credential" class="btn">{% trans 'Show' %}</a>
+                        <button class="btn clipboard" data-clipboard-target="credential-password" type="button">{% trans 'Copy' %}</button>
                     </div>
                 </div>
             </div>
         </form>
     </div>
     <div class="modal-footer">
-        <a id="btn-delete-credential" href="#" class="btn btn-danger pull-left">{% trans 'Delete' %}</a>
-        <span id="credential-status" class="pull-left text-success">&nbsp;</span>
+        <div class="pull-left">
+            <a id="btn-delete-credential" href="#" class="btn btn-danger"><i class="icon icon-trash icon-white"></i> {% trans 'Delete' %}</a>
+            <a id="btn-edit-credential" href="#" class="btn btn-success"><i class="icon icon-edit icon-white"></i> {% trans 'Edit' %}</a>
+            <span id="credential-status" class="text-success">&nbsp;</span>
+        </div>
+        <a id="btn-save-credential" href="#" class="btn btn-primary hide">{% trans 'Save' %}</a>
         <a href="#" class="btn" data-dismiss="modal">{% trans 'Close' %}</a>
     </div>
 </div>
 <div class="toolbar pull-right">
-    <a id="btn-add-credential" href="#dialog-credential" role="button" data-toggle="modal" class="btn">{% trans 'Add Credential' %}</a>
-    <a id="btn-delete-group" href="#" class="btn btn-danger">{% trans 'Delete Group' %}</a>
+    <a id="btn-add-credential" href="#dialog-credential" role="button" data-toggle="modal" class="btn"><i class="icon icon-plus"></i> {% trans 'Add Credential' %}</a>
+    <a id="btn-delete-group" href="#" class="btn btn-danger"><i class="icon icon-trash icon-white"></i> {% trans 'Delete Group' %}</a>
 </div>
 <div class="group title">{{group.name}}</div>
 <p class="muted">{{group.description|default:""}}</p>
@@ -134,11 +144,25 @@
         }
         return false;
     });
+    $("a#btn-edit-credential").click(function() {
+        $("#dialog-show-credential *").removeClass('hide');
+        $("#form-show-credential input").prop('readonly', false);
+        return false;
+    });
+    $("a#btn-save-credential").click(function() {
+        var data = $("form#form-show-credential").serializeObject();
+        updateCredential(data, function(res) {
+            if (res.status == 202) {
+                redirect("{% url vault.views.group group.uuid %}");
+            }
+        });
+        return false;
+    });
     $("a#btn-delete-credential").click(function() {
         var uuid = $("#credential-uuid").val();
         if (confirm("{% trans 'Delete credential?  This is irreversible.' %}")) {
             deleteCredential(uuid, function(res) {
-                redirect("{% url index %}");
+                redirect("{% url vault.views.group group.uuid %}");
             });
         }
         return false;
@@ -166,6 +190,7 @@
         getCredential(uuid, function(data, xhr) {
             $("#credential-uuid").val(data.uuid);
             $("#credential-name").val(data.name);
+            $("#credential-description").text(data.description);
             $("#credential-username").val(data.username);
             $("#credential-url").val(data.url);
             $("#credential-url").prop('placeholder', '');

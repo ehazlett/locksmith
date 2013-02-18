@@ -16,7 +16,8 @@ from django.core.cache import cache
 from vault.models import CredentialGroup, Credential
 from tastypie.models import ApiKey
 from tastypie.constants import ALL, ALL_WITH_RELATIONS
-from utils.encryption import decrypt
+from utils.encryption import (decrypt, set_user_encryption_key,
+    get_user_encryption_key)
 import simplejson as json
 import os
 
@@ -53,11 +54,14 @@ class AppAuthentication(Authentication):
         else: # check api_key
             if request.META.has_key('HTTP_AUTHORIZATION'):
                 auth_header = request.META.get('HTTP_AUTHORIZATION')
+                key = request.META.get('HTTP_ENCRYPTION_KEY')
                 try:
                     username, api_key = auth_header.split()[-1].split(':')
                     # check auth
                     user = User.objects.get(username=username)
                     if user and user.api_key.key == api_key:
+                        # set encryption key
+                        set_user_encryption_key(user.username, key)
                         # auth successful ; set request.user to user for
                         # later user (authorization, filtering, etc.)
                         request.user = user
@@ -76,8 +80,7 @@ class UserResource(ModelResource):
         authorization = Authorization()
         resource_name = 'accounts'
 
-    # change to prepend_urls for v1.0+
-    def override_urls(self):
+    def prepend_urls(self):
         return [
             url(r"^(?P<resource_name>%s)/(?P<username>[\w\d_.-]+)/$" % self._meta.resource_name, self.wrap_view('dispatch_detail'), name="api_dispatch_detail"),
         ]
@@ -88,20 +91,19 @@ class UserResource(ModelResource):
             object_list = object_list.filter(username=request.user.username)
         return object_list
 
-    # build custom resource_uri (instead of /resource/<pk>/)
-    def get_resource_uri(self, bundle_or_obj):
-        kwargs = {
-            'resource_name': self._meta.resource_name,
-        }
-        if isinstance(bundle_or_obj, Bundle):
-            kwargs['pk'] = bundle_or_obj.obj.username
-        else:
-            kwargs['pk'] = bundle_or_obj.id
-
-        if self._meta.api_name is not None:
-            kwargs['api_name'] = self._meta.api_name
-
-        return self._build_reverse_url('api_dispatch_detail', kwargs = kwargs)
+    # this is broken in tastypie 0.9.13
+    ## build custom resource_uri (instead of /resource/<pk>/)
+    #def get_resource_uri(self, bundle_or_obj, url_name='api_dispatch_list'):
+    #    kwargs = {
+    #        'resource_name': self._meta.resource_name,
+    #    }
+    #    if isinstance(bundle_or_obj, Bundle):
+    #        kwargs['pk'] = bundle_or_obj.obj.username
+    #    else:
+    #        kwargs['pk'] = bundle_or_obj.id
+    #    if self._meta.api_name is not None:
+    #        kwargs['api_name'] = self._meta.api_name
+    #    return self._build_reverse_url('api_dispatch_detail', kwargs = kwargs)
 
     def dehydrate(self, bundle):
         # add api_key
@@ -121,8 +123,7 @@ class CredentialGroupResource(ModelResource):
             "description": ALL,
         }
 
-    # change to prepend_urls for v1.0+
-    def override_urls(self):
+    def prepend_urls(self):
         return [
             url(r"^(?P<resource_name>%s)/(?P<uuid>[\w\d_.-]+)/$" \
                 % self._meta.resource_name, self.wrap_view('dispatch_detail'),
@@ -134,18 +135,19 @@ class CredentialGroupResource(ModelResource):
             object_list = object_list.filter(owner=request.user)
         return object_list
 
+    # this is broken in tastypie 0.9.13
     # build custom resource_uri (instead of /resource/<pk>/)
-    def get_resource_uri(self, bundle_or_obj):
-        kwargs = {
-            'resource_name': self._meta.resource_name,
-        }
-        if isinstance(bundle_or_obj, Bundle):
-            kwargs['pk'] = bundle_or_obj.obj.uuid
-        else:
-            kwargs['pk'] = bundle_or_obj.id
-        if self._meta.api_name is not None:
-            kwargs['api_name'] = self._meta.api_name
-        return self._build_reverse_url('api_dispatch_detail', kwargs = kwargs)
+    #def get_resource_uri(self, bundle_or_obj, url_name='api_dispatch_list'):
+    #    kwargs = {
+    #        'resource_name': self._meta.resource_name,
+    #    }
+    #    if isinstance(bundle_or_obj, Bundle):
+    #        kwargs['pk'] = bundle_or_obj.obj.uuid
+    #    else:
+    #        kwargs['pk'] = bundle_or_obj.id
+    #    if self._meta.api_name is not None:
+    #        kwargs['api_name'] = self._meta.api_name
+    #    return self._build_reverse_url('api_dispatch_detail', kwargs = kwargs)
 
     def obj_create(self, bundle, request, **kwargs):
         # set the owner
@@ -163,30 +165,31 @@ class CredentialResource(ModelResource):
         authentication = AppAuthentication()
         authorization = Authorization()
         resource_name = 'credentials'
+        pass_request_user_to_django = True
 
-    # change to prepend_urls for v1.0+
-    def override_urls(self):
+    def prepend_urls(self):
         return [
             url(r"^(?P<resource_name>%s)/(?P<uuid>[\w\d_.-]+)/$" % self._meta.resource_name,
                 self.wrap_view('dispatch_detail'), name="api_dispatch_detail"),
         ]
 
+    # this is broken in tastypie 0.9.13
     # build custom resource_uri (instead of /resource/<pk>/)
-    def get_resource_uri(self, bundle_or_obj):
-        kwargs = {
-            'resource_name': self._meta.resource_name,
-        }
-        if isinstance(bundle_or_obj, Bundle):
-            kwargs['pk'] = bundle_or_obj.obj.uuid
-        else:
-            kwargs['pk'] = bundle_or_obj.id
-        if self._meta.api_name is not None:
-            kwargs['api_name'] = self._meta.api_name
-        return self._build_reverse_url('api_dispatch_detail', kwargs = kwargs)
+    #def get_resource_uri(self, bundle_or_obj, url_name='api_dispatch_list'):
+    #    kwargs = {
+    #        'resource_name': self._meta.resource_name,
+    #    }
+    #    if isinstance(bundle_or_obj, Bundle):
+    #        kwargs['pk'] = bundle_or_obj.obj.uuid
+    #    else:
+    #        kwargs['pk'] = bundle_or_obj.id
+    #    if self._meta.api_name is not None:
+    #        kwargs['api_name'] = self._meta.api_name
+    #    return self._build_reverse_url('api_dispatch_detail', kwargs = kwargs)
 
     def dehydrate(self, bundle):
         u = bundle.request.user
-        key = cache.get(settings.CACHE_ENCRYPTION_KEY.format(u.username))
+        key = get_user_encryption_key(u.username)
         try:
             bundle.data['password'] = decrypt(bundle.data['password'],
                 key)

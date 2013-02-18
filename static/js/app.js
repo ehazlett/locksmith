@@ -100,6 +100,27 @@ function getCredential(uuid, callback) {
         }
     });
 }
+function updateCredential(options, callback) {
+    var opt = options || {}
+    var cb = callback || function(){};
+    var data = {
+        name: opt.name,
+        description: opt.description,
+        url: opt.url,
+        username: opt.username,
+        password: opt.password
+    }
+    $.ajax({
+        url: API_URL + 'credentials/' + opt.uuid,
+        data: JSON.stringify(data),
+        type: "PATCH",
+        dataType: "application/json",
+        contentType: "application/json",
+        complete: function(xhr) {
+            cb(xhr);
+        }
+    });
+}
 function deleteCredential(uuid, callback) {
     var cb = callback || function(){};
     $.ajax({

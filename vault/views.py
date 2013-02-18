@@ -10,6 +10,7 @@ from django.conf import settings
 from django.contrib import messages
 from vault.models import CredentialGroup, Credential
 from vault.forms import CredentialGroupForm
+from utils.encryption import set_user_encryption_key
 
 @login_required
 def index(request):
@@ -32,6 +33,5 @@ def group(request, uuid=None):
 def set_key(request):
     key = request.POST.get('key')
     u = request.user
-    cache.set(settings.CACHE_ENCRYPTION_KEY.format(u.username), key,
-        timeout=u.get_profile().encryption_key_timeout)
+    set_user_encryption_key(u.username, key)
     return redirect(reverse('index'))

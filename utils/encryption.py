@@ -3,6 +3,26 @@ from Crypto.Cipher import AES
 from django.utils.translation import ugettext as _
 import base64
 from django.conf import settings
+from django.core.cache import cache
+from django.contrib.auth.models import User
+
+def set_user_encryption_key(username=None, key=None, ttl=None):
+    """
+    Sets the encryption key for the specified user
+
+    """
+    if not ttl:
+        u = User.objects.get(username=username)
+        ttl = u.get_profile().encryption_key_timeout
+    cache.set(settings.CACHE_ENCRYPTION_KEY.format(username), key,
+        timeout=ttl)
+
+def get_user_encryption_key(username=None):
+    """
+    Gets the encryption key for the specified user
+
+    """
+    return cache.get(settings.CACHE_ENCRYPTION_KEY.format(username))
 
 def hash_text(text):
     """
