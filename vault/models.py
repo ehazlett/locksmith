@@ -1,5 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.conf import settings
+from django.core.cache import cache
 from uuid import uuid4
 from utils.encryption import encrypt
 from locksmith.middleware import threadlocal
@@ -38,8 +40,9 @@ class Credential(models.Model):
             self.name)
 
     def save(self, *args, **kwargs):
-        session = threadlocal.get_current_session()
-        key = session.get('key', kwargs.get('key'))
+        user = threadlocal.get_current_user()
+        key = cache.get(settings.CACHE_ENCRYPTION_KEY.format(user.username),
+            kwargs.get('key'))
         # if no key throw error
         if not key:
             raise StandardError("If calling save from outside of a request, " \

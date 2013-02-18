@@ -7,24 +7,27 @@ TEMPLATE_DEBUG = DEBUG
 
 APP_NAME = 'locksmith'
 ADMINS = (
-    # ('Your Name', 'your_email@example.com'),
+    ('Evan Hazlett', 'ejhazlett@gmail.com'),
 )
 
+AUTH_PROFILE_MODULE = 'accounts.UserProfile'
 MANAGERS = ADMINS
 
 SENTRY_DSN = ''
+
+CACHE_ENCRYPTION_KEY = '{0}:key'
 
 # arcus cloud settings
 if 'VCAP_SERVICES' in os.environ:
     import json
     vcap_services = json.loads(os.environ['VCAP_SERVICES'])
     mysql_srv = vcap_services['mysql-5.1'][0]
-    memcached_srv = vcap_services['memcached-1.4'][0]
     redis_srv = vcap_services['redis-2.6'][0]
+    memcached_srv = vcap_services['memcached-1.4'][0]
     elasticsearch_srv = vcap_services['elasticsearch-0.19'][0]
     mysql_creds = mysql_srv['credentials']
-    memcached_creds = memcached_srv['credentials']
     redis_creds = redis_srv['credentials']
+    memcached_creds = memcached_srv['credentials']
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.mysql',
@@ -48,10 +51,10 @@ if 'VCAP_SERVICES' in os.environ:
     REDIS_PASSWORD = redis_creds['password']
     RQ_QUEUES = {
         'default': {
-            'HOST': redis_creds['host'],
-            'PORT': redis_creds['port'],
-            'DB': 0,
-            'PASSWORD': redis_creds['password'],
+            'HOST': REDIS_HOST,
+            'PORT': REDIS_PORT,
+            'DB': REDIS_DB,
+            'PASSWORD': REDIS_PASSWORD,
         }
     }
 else:
@@ -70,16 +73,16 @@ else:
             'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
         }
     }
-    REDIS_HOST = 'localhost'
+    REDIS_HOST = '127.0.0.1'
     REDIS_PORT = 6739
     REDIS_DB = 0
     REDIS_PASSWORD = None
     RQ_QUEUES = {
         'default': {
-            'HOST': '127.0.0.1',
-            'PORT': 6379,
-            'DB': 0,
-            'PASSWORD': None,
+            'HOST': REDIS_HOST,
+            'PORT': REDIS_PORT,
+            'DB': REDIS_DB,
+            'PASSWORD': REDIS_PASSWORD,
         }
     }
 
@@ -214,6 +217,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "django.contrib.messages.context_processors.messages",
     "locksmith.context_processors.app_name",
     "locksmith.context_processors.google_analytics_code",
+    "locksmith.context_processors.encryption_key",
     'social_auth.context_processors.social_auth_by_name_backends',
     'social_auth.context_processors.social_auth_backends',
     'social_auth.context_processors.social_auth_login_redirect',

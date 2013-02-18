@@ -11,6 +11,8 @@ from django.http import Http404, HttpResponse
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login as login_user
 from django.views.decorators.csrf import csrf_exempt
+from django.conf import settings
+from django.core.cache import cache
 from vault.models import CredentialGroup, Credential
 from tastypie.models import ApiKey
 from tastypie.constants import ALL, ALL_WITH_RELATIONS
@@ -141,10 +143,8 @@ class CredentialGroupResource(ModelResource):
             kwargs['pk'] = bundle_or_obj.obj.uuid
         else:
             kwargs['pk'] = bundle_or_obj.id
-
         if self._meta.api_name is not None:
             kwargs['api_name'] = self._meta.api_name
-
         return self._build_reverse_url('api_dispatch_detail', kwargs = kwargs)
 
     def obj_create(self, bundle, request, **kwargs):
@@ -180,17 +180,16 @@ class CredentialResource(ModelResource):
             kwargs['pk'] = bundle_or_obj.obj.uuid
         else:
             kwargs['pk'] = bundle_or_obj.id
-
         if self._meta.api_name is not None:
             kwargs['api_name'] = self._meta.api_name
-
         return self._build_reverse_url('api_dispatch_detail', kwargs = kwargs)
 
     def dehydrate(self, bundle):
-        # add categories
+        u = bundle.request.user
+        key = cache.get(settings.CACHE_ENCRYPTION_KEY.format(u.username))
         try:
             bundle.data['password'] = decrypt(bundle.data['password'],
-                bundle.request.session.get('key'))
+                key)
         except:
             bundle.data['password'] = None
         return bundle
