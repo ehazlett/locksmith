@@ -20,7 +20,7 @@ if 'VCAP_SERVICES' in os.environ:
     vcap_services = json.loads(os.environ['VCAP_SERVICES'])
     mysql_srv = vcap_services['mysql-5.1'][0]
     memcached_srv = vcap_services['memcached-1.4'][0]
-    redis_srv = vcap_services['redis-2.2'][0]
+    redis_srv = vcap_services['redis-2.6'][0]
     elasticsearch_srv = vcap_services['elasticsearch-0.19'][0]
     mysql_creds = mysql_srv['credentials']
     memcached_creds = memcached_srv['credentials']
