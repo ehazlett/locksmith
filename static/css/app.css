@@ -212,6 +212,9 @@ div.social-auth {
 span#credential-status {
   margin-left: 20px;
 }
+div.credential-groups {
+  margin: 45px 0 0 0;
+}
 div.credentials {
   margin: 25px 0 0 0;
 }

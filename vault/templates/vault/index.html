@@ -30,11 +30,11 @@
 <div class="toolbar pull-right">
     <a href="#dialog-add-group" class="btn" role="button" data-toggle="modal"><i class="icon icon-plus"></i> {% trans 'Add Group' %}</a>
 </div>
-<div>
+<div class="credential-groups">
     {% if credential_groups.all %}
     <ul class="thumbnails">
         {% for group in credential_groups.all %}
-        <li class="span2 group">
+        <li class="span3 group">
             <a href="{% url vault.group uuid=group.uuid %}" class="thumbnail">
                 <div class="entypo large">&#128196;</div>
                 <div class="caption">
@@ -49,7 +49,7 @@
     {% endif %}
 </div>
 <script type="text/javascript">
-    $("#btn-create-group").click(function() {
+    function createGroup() {
         var data = $("#form-add-group").serializeObject();
         if ($("#form-add-group").valid()) {
             createCredentialGroup(data, function(res) {
@@ -57,9 +57,19 @@
                 return false;
             });
         }
+    }
+    $("#form-add-group input").keypress(function(e) {
+        if (e.keyCode == 13) {
+            createGroup();
+            return false;
+        }
+    });
+    $("#btn-create-group").click(function() {
+        createGroup();
+        return false;
     });
     $(function() {
-        $("form-add-group").validate();
+        $("#form-add-group").validate();
     });
 </script>
 {% endblock %}
