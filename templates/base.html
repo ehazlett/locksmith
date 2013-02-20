@@ -120,11 +120,21 @@
         $("#form-key").submit();
         return false;
     });
+    function checkSession() {
+        $.getJSON("{% url vault.views.check_session %}", function(data) {
+            if (data.status == false) {
+                redirect("{{request.path}}");
+            }
+        });
+    }
     $(function(){
-        {% if not request.session.key %}
+        {% if request.user.is_authenticated and not ENCRYPTION_KEY %}
         $("#dialog-key").modal('show');
         $("#form-key").validate();
         $("#encryption-key").focus();
+        {% else %}
+        // check session
+        setInterval(checkSession, 10000);
         {% endif %}
         $("a[rel=tooltip]").tooltip();
         $("a[rel=popover]").popover();

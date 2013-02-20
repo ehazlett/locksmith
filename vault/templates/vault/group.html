@@ -134,7 +134,6 @@
 <script type="text/javascript">
     $("a#btn-generate-password").click(function() {
         $.get("{% url vault.views.random_password %}", function(data) {
-            console.log(data);
             $("#password").val(data);
         });
         return false;

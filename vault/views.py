@@ -11,7 +11,11 @@ from django.contrib import messages
 from vault.models import CredentialGroup, Credential
 from vault.forms import CredentialGroupForm
 from utils.encryption import (set_user_encryption_key, clear_user_encryption_key,
-    generate_password)
+    get_user_encryption_key, generate_password)
+try:
+    import simplejson as json
+except ImportError:
+    import json
 
 @login_required
 def index(request):
@@ -48,3 +52,14 @@ def lock_session(request):
 def random_password(request):
     return HttpResponse(generate_password())
 
+@login_required
+def check_session(request):
+    key = get_user_encryption_key(request.user.username)
+    if key:
+        key = True
+    else:
+        key = False
+    data = {
+        'status': key,
+    }
+    return HttpResponse(json.dumps(data), content_type='application/json')
