@@ -255,6 +255,7 @@ div.welcome {
 div#footer {
   width: 100%;
   color: #b3b3b3;
+  margin: 25px 0 0 0;
   padding: 10px 0 0 0;
   height: 75px;
 }
