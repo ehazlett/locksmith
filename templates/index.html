@@ -2,4 +2,18 @@
 {% load i18n %}
 
 {% block main_content %}
+<div class="welcome">
+    <div class="span8">
+        <div class="lead slogan">{% trans 'AES 256 Password Encryption' %}</div>
+        <div class="lead">
+        {% blocktrans %}Locksmith encrypts and stores your accounts in one place. No more applications to have installed or files to keep track. Access them anywhere with Locksmith.{% endblocktrans %}
+        </div>
+        <div class="join">
+            <a href="#" class="btn btn-large btn-primary btn-join">{% trans "Signup" %}</a>
+        </div>
+    </div>
+    <div class="span2 logo pull-right hidden-phone">
+        <img src="{{STATIC_URL}}img/lock.png" />
+    </div>
+</div>
 {% endblock %}

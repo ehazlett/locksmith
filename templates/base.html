@@ -104,6 +104,17 @@
       {% block main_content %}{% endblock %}
     </div>
     {% endblock %}
+
+    <div id="footer">
+      <div id="footer-info">
+        <ul class="inline footer-links">
+          <li class="entypo-social"><a href="https://github.com/ehazlett/locksmith" rel="tooltip" title="{% trans 'Code' %}" target="_arcus_gh">&#62208;</a></li>
+          <li class="entypo-social"><a href="https://twitter.com/locksmith_io" rel="tooltip" title="{% trans 'Updates' %}" target="_arcus_tw">&#62217;</a></li>
+        </ul>
+      </div>
+      <div id="copyright" class="center">&copy; Locksmith Project</div>
+    </div>
+
     <!-- scripts -->
     <script type="text/javascript" src="{{STATIC_URL}}js/bootstrap.min.js"></script>
     <script type="text/javascript" src="{{STATIC_URL}}js/app.js"></script>
