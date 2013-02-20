@@ -6,4 +6,5 @@ urlpatterns = patterns('vault.views',
         name='vault.group'),
     url(r'^setkey/$', 'set_key', name='vault.set_key'),
     url(r'^lock/$', 'lock_session', name='vault.lock_session'),
+    url(r'^genpass/$', 'random_password', name='vault.random_password'),
 )

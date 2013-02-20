@@ -10,7 +10,8 @@ from django.conf import settings
 from django.contrib import messages
 from vault.models import CredentialGroup, Credential
 from vault.forms import CredentialGroupForm
-from utils.encryption import set_user_encryption_key, clear_user_encryption_key
+from utils.encryption import (set_user_encryption_key, clear_user_encryption_key,
+    generate_password)
 
 @login_required
 def index(request):
@@ -42,3 +43,8 @@ def lock_session(request):
     nxt = request.GET.get('next', reverse('index'))
     clear_user_encryption_key(request.user.username)
     return redirect(nxt)
+
+@login_required
+def random_password(request):
+    return HttpResponse(generate_password())
+

@@ -37,7 +37,10 @@
             <div class="control-group">
                 <label class="control-label" for="password">{% trans 'Password / Key' %}</label>
                 <div class="controls">
-                  <input id="password" type="password" name="password" class="required" />
+                    <div class="input-append">
+                        <input id="password" type="text" name="password" class="required" />
+                        <a href="#" id="btn-generate-password" rel="tooltip" title="{% trans 'Generate Password' %}" class="btn entypo">&#128274;</a>
+                    </div>
                 </div>
             </div>
             <input type="hidden" name="groupUUID" value="{{group.uuid}}"/>
@@ -129,6 +132,13 @@
 {% endif %}
 {% endwith %}
 <script type="text/javascript">
+    $("a#btn-generate-password").click(function() {
+        $.get("{% url vault.views.random_password %}", function(data) {
+            console.log(data);
+            $("#password").val(data);
+        });
+        return false;
+    });
     $("a#btn-show-credential").click(function() {
         var el = $("#credential-password");
         var t = el.prop('type');

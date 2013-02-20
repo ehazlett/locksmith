@@ -5,6 +5,17 @@ import base64
 from django.conf import settings
 from django.core.cache import cache
 from django.contrib.auth.models import User
+import string
+import random
+
+def generate_password(length=16):
+    """
+    Generates a new random password
+    
+    :param length: Length of password
+
+    """
+    return ''.join(random.sample(string.letters+string.digits, length))
 
 def set_user_encryption_key(username=None, key=None, ttl=None):
     """
