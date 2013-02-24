@@ -16,7 +16,6 @@ MANAGERS = ADMINS
 SENTRY_DSN = ''
 SIGNUP_ENABLED = True
 
-DEFAULT_FILE_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
 AWS_ACCESS_KEY_ID = ''
 AWS_SECRET_ACCESS_KEY = ''
 AWS_STORAGE_BUCKET_NAME = 'locksmith'
@@ -333,6 +332,7 @@ except ImportError:
 
 if AWS_ACCESS_KEY_ID:
     STATICFILES_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
+    DEFAULT_FILE_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
 
 # these must come after the above local_settings import in order to
 # check for values in local_settings
