@@ -11,6 +11,7 @@ from django.conf import settings
 from django.utils.translation import ugettext as _
 from accounts.forms import AccountForm
 from accounts.models import UserProfile
+from datetime import datetime
 from utils import billing
 
 @require_http_methods(["GET", "POST"])
@@ -83,6 +84,7 @@ def activate(request):
             messages.success(request, _('Thanks for supporting!  Please let us know if you have any questions.'))
             up = request.user.get_profile()
             up.is_pro = True
+            up.pro_join_date = datetime.now()
             up.save()
             return redirect(reverse('index'))
         else:

@@ -14,6 +14,7 @@ class UserProfile(models.Model):
     encryption_key_timeout = models.IntegerField(default=3600, blank=True,
         null=True)
     is_pro = models.NullBooleanField(default=False, null=True, blank=True)
+    pro_join_date = models.DateTimeField(null=True, blank=True)
 
     def __unicode__(self):
         return self.user.username
