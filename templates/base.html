@@ -120,7 +120,10 @@
           <li class="entypo-social"><a href="https://twitter.com/locksmith_io" rel="tooltip" title="{% trans 'Updates' %}" target="_arcus_tw">&#62217;</a></li>
         </ul>
       </div>
-      <div id="copyright" class="center">&copy; Locksmith Project</div>
+      <div id="copyright" class="center">&copy; Locksmith Project </div>
+      {% if request.user.is_superuser %}
+      <div class="center app-info">{% trans 'Revision' %}: {{APP_REVISION}}</div>
+      {% endif %}
     </div>
 
     <!-- scripts -->

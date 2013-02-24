@@ -1,11 +1,17 @@
 # Django settings for locksmith project.
 import os
+import subprocess
 PROJECT_ROOT = os.path.join(os.path.dirname(__file__), '../')
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
 APP_NAME = 'locksmith'
+# get latest git revision
+process = subprocess.Popen(['git', 'rev-parse', 'HEAD'], stdout=subprocess.PIPE)
+out, err = process.communicate()
+
+APP_REVISION = out[:6]
 ADMINS = (
     ('Evan Hazlett', 'ejhazlett@gmail.com'),
 )
@@ -21,6 +27,7 @@ AWS_SECRET_ACCESS_KEY = ''
 AWS_STORAGE_BUCKET_NAME = 'locksmith'
 
 CACHE_ENCRYPTION_KEY = '{0}:key'
+
 
 # arcus cloud settings
 if 'VCAP_SERVICES' in os.environ:
@@ -223,7 +230,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "django.core.context_processors.request",
     "django.core.context_processors.tz",
     "django.contrib.messages.context_processors.messages",
-    "locksmith.context_processors.app_name",
+    "locksmith.context_processors.app_info",
     "locksmith.context_processors.google_analytics_code",
     "locksmith.context_processors.encryption_key",
     "locksmith.context_processors.intercom_app_id",

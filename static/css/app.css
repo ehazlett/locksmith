@@ -290,3 +290,7 @@ form#signup, form#activate {
 .pro-label {
   margin: 0 2px 0 3px;
 }
+.app-info {
+  margin: 0 0 0 10px;
+  font-size: 12px;
+}
