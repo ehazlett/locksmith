@@ -89,6 +89,8 @@ else:
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 
 GOOGLE_ANALYTICS_CODE = ''
+STRIPE_API_KEY = ''
+ACCOUNT_COST = 12 # pro account cost in dollars
 
 # auth backends
 AUTHENTICATION_BACKENDS = (

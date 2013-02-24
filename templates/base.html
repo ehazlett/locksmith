@@ -61,7 +61,7 @@
         </div>
         {% endfor %}
         <script type="text/javascript">
-        $(".alert").delay(5000).fadeOut();
+        $(".alert").delay(8000).fadeOut();
         </script>
         {% endif %}
     </div>
@@ -69,6 +69,11 @@
       <div class="navbar-inner">
         <div class="container-fluid">
           <a class="brand" href="/">{{APP_NAME}}</a>
+          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+          </a>
           <div class="nav-collapse">
             <ul class="nav">
               <li><a href="{% url locksmith.views.about %}">{% trans 'about' %}</a></li>
@@ -78,10 +83,13 @@
             <ul class="nav pull-right">
               {% if request.user.id != None %}
               <li class="dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{request.user.username}} <b class="caret"></b></a>
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{request.user.username}} {% if request.user.get_profile.is_pro %}<span class="label label-info pro-label">{% trans 'pro' %}</span>{% endif %}<b class="caret"></b></a>
                 <ul class="dropdown-menu">
                   <li><a href="{% url accounts.details %}">{% trans 'account' %}</a></li>
                   <li><a href="{% url vault.views.lock_session %}?next={{request.path}}">{% trans 'lock' %}</a></li>
+                  {% if not request.user.get_profile.is_pro %}
+                  <li><a href="{% url accounts.activate %}">{% trans 'go pro' %}</a></li>
+                  {% endif %}
                   {% if request.user.is_superuser %}
                   <li class="divider"></li>
                   <li><a href="/admin/">{% trans 'administration' %}</a></li>

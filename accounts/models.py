@@ -13,6 +13,7 @@ class UserProfile(models.Model):
     user = models.ForeignKey(User, unique=True)
     encryption_key_timeout = models.IntegerField(default=3600, blank=True,
         null=True)
+    is_pro = models.NullBooleanField(default=False, null=True, blank=True)
 
     def __unicode__(self):
         return self.user.username

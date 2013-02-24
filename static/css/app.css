@@ -17,6 +17,7 @@ a:hover {
   left: 10px;
   right: 10px;
   z-index: 999;
+  text-align: center;
 }
 .info {
   color: #8a8a8a;
@@ -183,10 +184,6 @@ div.modal.span10 {
   position: fixed;
   left: 10%;
 }
-div.dashboard {
-  width: 60%;
-  margin: 0 auto 0 auto;
-}
 div.toolbar {
   margin: 0 0 10px 0;
 }
@@ -286,4 +283,10 @@ ul.footer-links li a {
 }
 ul.footer-links li a:hover {
   color: #cacaca;
+}
+form#signup, form#activate {
+  text-align: left;
+}
+.pro-label {
+  margin: 0 2px 0 3px;
 }

@@ -3,19 +3,16 @@
 {% load bootstrap_tags %}
 
 {% block main_content %}
-<div class="dashboard">
-  <p class="lead">{% trans 'Account Details' %}</p>
-  <div>
+<div class="dashboard span5 offset4">
     <form class="form-horizontal" method="post">
       {% csrf_token %}
       {{form|as_bootstrap}}
       <div class="control-group">
         <div class="controls">
-          <button type="submit" class="btn">{% trans 'Update' %}</button>
-          <a href="{% url index %}" class="btn">{% trans 'Cancel' %}</a>
+          <button type="submit" class="btn btn-large btn-primary">{% trans 'Update' %}</button>
+          <a href="{% url index %}" class="btn btn-large">{% trans 'Cancel' %}</a>
         </div>
       </div>
     </form>
-  </div>
 </div>
 {% endblock %}

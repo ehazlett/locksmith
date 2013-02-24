@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block main_content %}
+<div id="activate" class="span5 offset4 center">
+  <form id="activate" class="form" method="POST">
+    <fieldset>
+      {% csrf_token %}
+      <div class="control-group">
+          <div class="controls">
+              <input class="required span3 creditcard" type="text" name="card_number" placeholder="{% trans 'Card Number' %}" value="{{card_number}}" autofocus="true"/>
+              <input class="required span1 cvc" length="3" type="text" name="card_cvc"  placeholder="{% trans 'CVC' %}" card_cvc="{{card_cvc}}" />
+          </div>
+      </div>
+      <div class="control-group">
+          <div class="controls">
+              <select class="required span2" name="card_month">
+                  <option></option>
+                  <option>1</option>
+                  <option>2</option>
+                  <option>3</option>
+                  <option>4</option>
+                  <option>5</option>
+                  <option>6</option>
+                  <option>7</option>
+                  <option>8</option>
+                  <option>9</option>
+                  <option>10</option>
+                  <option>11</option>
+                  <option>12</option>
+              </select>
+              <select class="required span2" name="card_year">
+                  <option></option>
+                  <option>2013</option>
+                  <option>2014</option>
+                  <option>2015</option>
+                  <option>2016</option>
+                  <option>2017</option>
+                  <option>2018</option>
+                  <option>2019</option>
+                  <option>2020</option>
+                  <option>2021</option>
+                  <option>2022</option>
+                  <option>2023</option>
+                  <option>2024</option>
+                  <option>2025</option>
+              </select>
+          </div>
+      </div>
+      <div class="control-group">
+          <input class="required span3" type="text" name="card_name" placeholder="{% trans 'Card Name' %}" value="{{card_name}}" />
+      </div>
+      <div class="controls well">
+          <a id="btn-activate" href="#" class="btn btn-block btn-success btn-large">{% trans 'Go Pro!' %}</a>
+      </div>
+    </fieldset>
+  </form>
+</div>
+<script type="text/javascript">
+  $("input#password").keypress(function(e){
+    if (e.keyCode == 13) {
+        return;
+    }
+  });
+  $("a#btn-activate").click(function(){
+    $("form#activate").submit();
+  });
+  $(function(){
+    $("form#activate").validate();
+  });
+</script>
+{% endblock %}
