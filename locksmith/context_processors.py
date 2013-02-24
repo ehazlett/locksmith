@@ -8,6 +8,9 @@ def app_name(request):
 def google_analytics_code(request):
     return { 'GOOGLE_ANALYTICS_CODE': getattr(settings, 'GOOGLE_ANALYTICS_CODE')}
 
+def intercom_app_id(request):
+    return { 'INTERCOM_APP_ID': getattr(settings, 'INTERCOM_APP_ID')}
+
 def encryption_key(request):
     u = request.user
     key = get_user_encryption_key(u.username)
