@@ -49,6 +49,9 @@ def details(request):
 
 def signup(request):
     ctx = {}
+    if not settings.SIGNUP_ENABLED:
+        messages.warning(request, _('Signup is not enabled at this time.'))
+        return redirect(reverse('index'))
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')

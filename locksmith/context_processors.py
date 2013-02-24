@@ -12,3 +12,6 @@ def encryption_key(request):
     u = request.user
     key = get_user_encryption_key(u.username)
     return { 'ENCRYPTION_KEY': key }
+
+def signup_enabled(request):
+    return { 'SIGNUP_ENABLED': getattr(settings, 'SIGNUP_ENABLED')}

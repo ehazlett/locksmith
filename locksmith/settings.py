@@ -14,6 +14,7 @@ AUTH_PROFILE_MODULE = 'accounts.UserProfile'
 MANAGERS = ADMINS
 
 SENTRY_DSN = ''
+SIGNUP_ENABLED = True
 
 CACHE_ENCRYPTION_KEY = '{0}:key'
 
@@ -220,6 +221,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "locksmith.context_processors.app_name",
     "locksmith.context_processors.google_analytics_code",
     "locksmith.context_processors.encryption_key",
+    "locksmith.context_processors.signup_enabled",
     'social_auth.context_processors.social_auth_by_name_backends',
     'social_auth.context_processors.social_auth_backends',
     'social_auth.context_processors.social_auth_login_redirect',

@@ -115,7 +115,7 @@
     {% with credentials=group.get_credentials %}
     {% if credentials %}
     <ul class="thumbnails">
-        {% for cred in credentials %}
+        {% for cred in credentials|dictsort:"name" %}
         <li class="span2">
             <a href="#" class="thumbnail credential" data-name="{{cred.name}}" data-uuid="{{cred.uuid}}">
                 <div class="entypo">{% if cred.url %}&#59254;{% else %}&#128274;{% endif %}</div>
