@@ -3,6 +3,7 @@ MySQL-python==1.2.3
 South==0.7.6
 django-forms-bootstrap==2.0.3.post1
 django-social-auth==0.7.19
+django-storages==1.1.6
 django-tastypie==0.9.12
 httplib2==0.7.7
 mimeparse==0.1.3

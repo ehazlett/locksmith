@@ -16,6 +16,12 @@ MANAGERS = ADMINS
 SENTRY_DSN = ''
 SIGNUP_ENABLED = True
 
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
+AWS_ACCESS_KEY_ID = ''
+AWS_SECRET_ACCESS_KEY = ''
+AWS_STORAGE_BUCKET_NAME = 'locksmith'
+STATICFILES_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
+
 CACHE_ENCRYPTION_KEY = '{0}:key'
 
 # arcus cloud settings
