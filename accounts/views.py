@@ -96,11 +96,19 @@ def activate(request):
 @csrf_exempt
 def hook(request):
     event = json.loads(request.body)
+    # subscription payment success
     if event.get('type') == 'invoice.payment_succeeded':
         customer = event.get('data', {}).get('object', {}).get('customer')
         up = UserProfile.objects.get(customer_id=customer)
         if settings.DEBUG or event.get('livemode'):
             up.is_pro = True
             up.pro_join_date = datetime.now()
+            up.save()
+    # subscription ended
+    if event.get('type') == 'customer.subscription.deleted':
+        customer = event.get('data', {}).get('object', {}).get('customer')
+        up = UserProfile.objects.get(customer_id=customer)
+        if settings.DEBUG or event.get('livemode'):
+            up.is_pro = False
             up.save()
     return HttpResponse(status=200)
