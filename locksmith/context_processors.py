@@ -11,6 +11,12 @@ def app_info(request):
 def google_analytics_code(request):
     return { 'GOOGLE_ANALYTICS_CODE': getattr(settings, 'GOOGLE_ANALYTICS_CODE')}
 
+def stripe_info(request):
+    return {
+        'STRIPE_API_KEY': getattr(settings, 'STRIPE_API_KEY'),
+        'STRIPE_PUBLISHABLE_KEY': getattr(settings, 'STRIPE_PUBLISHABLE_KEY'),
+    }
+
 def intercom_app_id(request):
     return { 'INTERCOM_APP_ID': getattr(settings, 'INTERCOM_APP_ID')}
 

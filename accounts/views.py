@@ -72,28 +72,19 @@ def signup(request):
 def activate(request):
     ctx = {}
     if request.method == 'POST':
-        card_number = request.POST.get('card_number')
-        card_cvc = request.POST.get('card_cvc')
-        card_month = request.POST.get('card_month')
-        card_year = request.POST.get('card_year')
-        card_name = request.POST.get('card_name')
-        c = billing.charge(settings.ACCOUNT_COST, card_number=card_number,
-            card_exp_month=card_month, card_exp_year=card_year,
-            card_cvc=card_cvc, card_name=card_name)
-        if c.get('status') == True:
-            messages.success(request, _('Thanks for supporting!  Please let us know if you have any questions.'))
+        token = request.POST.get('token')
+        try:
+            customer = billing.create_customer(token, settings.ACCOUNT_PLAN,
+                request.user.email)
             up = request.user.get_profile()
             up.is_pro = True
+            up.customer_id = customer.id
             up.pro_join_date = datetime.now()
             up.save()
+            messages.success(request, _('Thanks for supporting!  Please let us know if you have any questions.'))
             return redirect(reverse('index'))
-        else:
+        except Exception, e:
             messages.error(request, '{0}:{1}'.format(
-                _('Error processing payment'), c.get('message')))
-            ctx['card_number'] = card_number
-            ctx['card_cvc'] = card_cvc
-            ctx['card_month'] = card_month
-            ctx['card_year'] = card_year
-            ctx['card_name'] = card_name
+                _('Error processing payment'), e))
     return render_to_response('accounts/activate.html', ctx,
         context_instance=RequestContext(request))

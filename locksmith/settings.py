@@ -103,7 +103,7 @@ SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 GOOGLE_ANALYTICS_CODE = ''
 INTERCOM_APP_ID = ''
 STRIPE_API_KEY = ''
-ACCOUNT_COST = 12 # pro account cost in dollars
+ACCOUNT_PLAN = 'locksmith-pro' # stripe plan
 
 # auth backends
 AUTHENTICATION_BACKENDS = (
@@ -235,6 +235,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "locksmith.context_processors.encryption_key",
     "locksmith.context_processors.intercom_app_id",
     "locksmith.context_processors.signup_enabled",
+    "locksmith.context_processors.stripe_info",
     'social_auth.context_processors.social_auth_by_name_backends',
     'social_auth.context_processors.social_auth_backends',
     'social_auth.context_processors.social_auth_login_redirect',

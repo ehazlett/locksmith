@@ -26,6 +26,7 @@
   <!-- scripts -->
   <script type="text/javascript" src="{{STATIC_URL}}js/jquery.min.js"></script>
   <script type="text/javascript" src="{{STATIC_URL}}js/jquery.validate.min.js"></script>
+  <script type="text/javascript" src="https://js.stripe.com/v1/"></script>
   {% block extra_head_js %}{% endblock %}
 </head>
 <body>
@@ -88,7 +89,7 @@
                   <li><a href="{% url accounts.details %}">{% trans 'account' %}</a></li>
                   <li><a href="{% url vault.views.lock_session %}?next={{request.path}}">{% trans 'lock' %}</a></li>
                   {% if not request.user.get_profile.is_pro %}
-                  <li><a href="{% url accounts.activate %}">{% trans 'go pro' %}</a></li>
+                  <li><a href="{% url accounts.activate %}">{% trans 'upgrade' %}</a></li>
                   {% endif %}
                   {% if request.user.is_superuser %}
                   <li class="divider"></li>

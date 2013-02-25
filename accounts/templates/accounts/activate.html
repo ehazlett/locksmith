@@ -2,20 +2,35 @@
 {% load i18n %}
 
 {% block main_content %}
-<div id="activate" class="span5 offset4 center">
-  <form id="activate" class="form" method="POST">
+<div id="activate" class="span4 offset3">
+  <p class="lead">{% trans '$12 will be charged to your card anually.  Thank you very much!' %}</p>
+  <form id="activate" class="form-horizontal" method="POST">
     <fieldset>
       {% csrf_token %}
+      <input id="token" type="hidden" name="token"/>
       <div class="control-group">
+          <label class="control-label" for="card_name">{% trans 'Cardholder Name' %}</label>
           <div class="controls">
-              <input class="required span3 creditcard" type="text" name="card_number" placeholder="{% trans 'Card Number' %}" value="{{card_number}}" autofocus="true"/>
-              <input class="required span1 cvc" length="3" type="text" name="card_cvc"  placeholder="{% trans 'CVC' %}" card_cvc="{{card_cvc}}" />
+              <input id="cardName" class="required span3" type="text" autofocus="true" />
           </div>
       </div>
       <div class="control-group">
+          <label class="control-label" for="card_number">{% trans 'Card Number' %}</label>
           <div class="controls">
-              <select class="required span2" name="card_month">
-                  <option></option>
+              <input id="cardNumber" class="required span3 creditcard" type="text" />
+          </div>
+      </div>
+      <div class="control-group">
+          <label class="control-label" for="card_cvc">{% trans 'Card CVC' %}</label>
+          <div class="controls">
+              <input id="cardCVC" class="required span1 cvc" length="3" type="text" />
+          </div>
+      </div>
+      <div class="control-group">
+          <label class="control-label" for="card_month">{% trans 'Expiration Date' %}</label>
+          <div class="controls">
+              <select id="cardMonth" class="required span1">
+                  <option>----</option>
                   <option>1</option>
                   <option>2</option>
                   <option>3</option>
@@ -29,8 +44,8 @@
                   <option>11</option>
                   <option>12</option>
               </select>
-              <select class="required span2" name="card_year">
-                  <option></option>
+              <select id="cardYear" class="required span2">
+                  <option>----</option>
                   <option>2013</option>
                   <option>2014</option>
                   <option>2015</option>
@@ -47,18 +62,33 @@
               </select>
           </div>
       </div>
-      <div class="control-group">
-          <input class="required span3" type="text" name="card_name" placeholder="{% trans 'Card Name' %}" value="{{card_name}}" />
-      </div>
-      <div class="controls well">
-          <a id="btn-activate" href="#" class="btn btn-block btn-success btn-large">{% trans 'Go Pro!' %}</a>
+      <div class="controls">
+          <a id="btn-activate" href="#" class="btn btn-success">{% trans 'Signup!' %}</a>
+          <span class="cart-info muted"><span class="entypo">&#128274;</span> {% trans 'We use' %} <a href="https://stripe.com/docs/stripe.js" target="_stripe">Stripe.js</a> {% trans 'and never store your credit card information.' %}</span>
+          </div>
       </div>
     </fieldset>
   </form>
 </div>
 <script type="text/javascript">
   $("a#btn-activate").click(function(){
-    $("form#activate").submit();
+    Stripe.setPublishableKey('{{STRIPE_PUBLISHABLE_KEY}}');
+    Stripe.createToken({
+        number: $('#cardNumber').val(),
+        cvc: $('#cardCVC').val(),
+        exp_month: $('#cardMonth').val(),
+        exp_year: $('#cardYear').val(),
+        name: $("#cardName").val()
+    }, function(status, response) {
+        if (response.error) {
+            flash(response.error.message);
+        } else {
+            var token = response['id'];
+            $("input#token").val(token);
+            $("form#activate").submit();
+        }
+    });
+    return false;
   });
   $(function(){
     $("form#activate").validate();

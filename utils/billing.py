@@ -19,6 +19,14 @@ from django.utils.translation import ugettext as _
 # set stripe api key
 stripe.api_key = getattr(settings, 'STRIPE_API_KEY')
 
+def create_customer(token=None, plan=None, email=None):
+    customer = stripe.Customer.create(
+        card=token,
+        plan=plan,
+        email=email
+    )
+    return customer
+
 def charge(amount=None, currency='usd', card_number=None,
     card_exp_month=None, card_exp_year=None, card_cvc=None, card_name=None,
     description='Locksmith Payment'):
