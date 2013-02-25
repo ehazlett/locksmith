@@ -197,9 +197,7 @@
         email: "{{request.user.email}}",
         created_at: {{request.user.date_joined|date:"U"}},
         pro_account: {{request.user.get_profile.is_pro}},
-        {% if request.user.get_profile.pro_join_date %}
-        pro_join_date: {{request.user.get_profile.pro_join_date|date:"U"}},
-        {% endif %}
+        pro_join_date: {% if request.user.get_profile.pro_join_date %}{{request.user.get_profile.pro_join_date|date:"U"}}{% else %}null{% endif %},
         app_id: "{{INTERCOM_APP_ID}}"
       };
     </script>
