@@ -103,6 +103,7 @@ SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 GOOGLE_ANALYTICS_CODE = ''
 INTERCOM_APP_ID = ''
 STRIPE_API_KEY = ''
+STRIPE_PUBLISHABLE_KEY = ''
 ACCOUNT_PLAN = 'locksmith-pro' # stripe plan
 
 # auth backends
