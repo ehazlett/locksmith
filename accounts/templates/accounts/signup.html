@@ -2,27 +2,42 @@
 {% load i18n %}
 
 {% block main_content %}
-<div id="signup" class="span5 offset4 center">
-  <form id="signup" class="form" method="POST">
+<div id="signup" class="span5 offset3">
+  <form id="signup" class="form form-horizontal" method="POST">
     <fieldset>
       {% csrf_token %}
       <div class="control-group">
+          <label class="control-label" for="first_name">{% trans 'First Name' %}</label>
           <div class="controls">
-              <input type="text" name="first_name" class="span2 required" placeholder="{% trans 'First Name' %}" value="{{first_name}}" autofocus="true" />
-              <input type="text" name="last_name" class="span2 required" placeholder="{% trans 'Last Name' %}" value="{{last_name}}" />
+              <input type="text" name="first_name" class="required" value="{{first_name}}" autofocus="true" />
           </div>
       </div>
       <div class="control-group">
+          <label class="control-label" for="first_name">{% trans 'Last Name' %}</label>
           <div class="controls">
-              <input type="text" name="username" class="span2 required" placeholder="{% trans 'Username' %}" value="{{username}}" />
-              <input id="password" type="password" name="password" class="span2 required" placeholder="{% trans 'Password' %}" />
+              <input type="text" name="last_name" class="required" value="{{last_name}}" />
           </div>
       </div>
       <div class="control-group">
-          <input type="text" name="email" class="required email span3" placeholder="{% trans 'Email' %}" value="{{email}}" />
+          <label class="control-label" for="username">{% trans 'Username' %}</label>
+          <div class="controls">
+              <input type="text" name="username" class="required" value="{{username}}" />
+          </div>
       </div>
-      <div class="controls well">
-          <a id="btn-signup" href="#" class="btn btn-block btn-success btn-large">{% trans 'Signup' %}</a>
+      <div class="control-group">
+          <label class="control-label" for="password">{% trans 'Password' %}</label>
+          <div class="controls">
+              <input id="password" type="password" name="password" class="required" />
+          </div>
+      </div>
+      <div class="control-group">
+          <label class="control-label" for="email">{% trans 'Email' %}</label>
+          <div class="controls">
+              <input type="text" name="email" class="required email" value="{{email}}" />
+          </div>
+      </div>
+      <div class="controls">
+          <a id="btn-signup" href="#" class="btn btn-success btn-large">{% trans 'Signup' %}</a>
       </div>
     </fieldset>
   </form>
