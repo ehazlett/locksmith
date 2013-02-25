@@ -96,6 +96,7 @@ def activate(request):
 @csrf_exempt
 def hook(request):
     event = json.loads(request.body)
+    print(event)
     # subscription payment success
     if event.get('type') == 'invoice.payment_succeeded':
         customer = event.get('data', {}).get('object', {}).get('customer')
