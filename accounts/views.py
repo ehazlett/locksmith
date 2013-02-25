@@ -97,8 +97,9 @@ def activate(request):
 def hook(request):
     event = json.loads(request.body)
     print(event)
+    event_type = event.get('type')
     # subscription payment success
-    if event.get('type') == 'invoice.payment_succeeded':
+    if event_type == 'invoice.payment_succeeded':
         customer = event.get('data', {}).get('object', {}).get('customer')
         up = UserProfile.objects.get(customer_id=customer)
         if settings.DEBUG or event.get('livemode'):
@@ -106,7 +107,10 @@ def hook(request):
             up.pro_join_date = datetime.now()
             up.save()
     # subscription ended
-    if event.get('type') == 'customer.subscription.deleted':
+    if event_type == 'customer.subscription.deleted' or \
+        event_type == 'charge.refunded' or event_type == 'charge.failed' or \
+        event_type == 'customer.subscription.deleted' or \
+        event_type == 'invoice.payment_failed':
         customer = event.get('data', {}).get('object', {}).get('customer')
         up = UserProfile.objects.get(customer_id=customer)
         if settings.DEBUG or event.get('livemode'):
