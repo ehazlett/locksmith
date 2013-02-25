@@ -83,9 +83,7 @@ def activate(request):
             customer = billing.create_customer(token, settings.ACCOUNT_PLAN,
                 request.user.email)
             up = request.user.get_profile()
-            up.is_pro = True
             up.customer_id = customer.id
-            up.pro_join_date = datetime.now()
             up.save()
             messages.success(request, _('Thanks for supporting!  Please let us know if you have any questions.'))
             return redirect(reverse('index'))
@@ -98,5 +96,11 @@ def activate(request):
 @csrf_exempt
 def hook(request):
     event = json.loads(request.body)
-    print(event)
+    if event.type == 'invoice.payment_succeeded':
+        customer = event.get('data', {}).get('object', {}).get('customer')
+        up = UserProfile.objects.get(customer_id=customer)
+        if settings.DEBUG or event.get('livemode'):
+            up.is_pro = True
+            up.pro_join_date = datetime.now()
+            up.save()
     return HttpResponse(status=200)
