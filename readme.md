@@ -4,6 +4,8 @@ open source web based 1password or keepass.
 
 Visit #locksmith-io on IRC (freenode) for questions, help, etc.
 
+Screenshots [here](https://github.com/ehazlett/locksmith/wiki/Screenshots)
+
 # Setup
 
 * `pip install -r requirements.txt`
