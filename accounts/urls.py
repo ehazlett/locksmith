@@ -6,4 +6,5 @@ urlpatterns = patterns('accounts.views',
     url(r'^details/$', 'details', name='accounts.details'),
     url(r'^signup/$', 'signup', name='accounts.signup'),
     url(r'^activate/$', 'activate', name='accounts.activate'),
+    url(r'^hook/$', 'hook', name='accounts.hook'),
 )

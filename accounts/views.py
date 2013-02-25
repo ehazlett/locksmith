@@ -13,6 +13,10 @@ from accounts.forms import AccountForm
 from accounts.models import UserProfile
 from datetime import datetime
 from utils import billing
+try:
+    import simplejson as json
+except ImportError:
+    import json
 
 @require_http_methods(["GET", "POST"])
 def login(request):
@@ -88,3 +92,8 @@ def activate(request):
                 _('Error processing payment'), e))
     return render_to_response('accounts/activate.html', ctx,
         context_instance=RequestContext(request))
+
+def hook(request):
+    event = json.parse(request.body)
+    print(event)
+    return HttpResponse(status=200)
