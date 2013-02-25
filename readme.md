@@ -2,6 +2,8 @@
 Locksmith is a password management application.  Think of it as a lightweight
 open source web based 1password or keepass.
 
+Visit #locksmith-io on IRC (freenode) for questions, help, etc.
+
 # Setup
 
 * `pip install -r requirements.txt`
