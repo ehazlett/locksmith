@@ -16,6 +16,7 @@ class UserProfile(models.Model):
     is_pro = models.NullBooleanField(default=False, null=True, blank=True)
     pro_join_date = models.DateTimeField(null=True, blank=True)
     customer_id = models.CharField(max_length=64, null=True, blank=True)
+    activation_code = models.CharField(max_length=64, null=True, blank=True)
 
     def __unicode__(self):
         return self.user.username

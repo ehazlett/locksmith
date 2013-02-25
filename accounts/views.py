@@ -9,12 +9,15 @@ from django.contrib.auth import (authenticate, login as login_user,
 from django.contrib.auth.models import User
 from django.contrib import messages
 from django.conf import settings
+from django.core.mail import send_mail
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.translation import ugettext as _
 from accounts.forms import AccountForm
 from accounts.models import UserProfile
 from datetime import datetime
 from utils import billing
+import random
+import string
 try:
     import simplejson as json
 except ImportError:
@@ -31,7 +34,7 @@ def login(request):
                 login_user(request, user)
                 return redirect(reverse('index'))
             else:
-                messages.error(request, _('Your account is disabled.  Please contact support.'))
+                messages.error(request, _('Your account is disabled.  Make sure you have activated your account.'))
         else:
             messages.error(request, _('Invalid username/password'))
     return render_to_response('accounts/login.html',
@@ -54,6 +57,14 @@ def details(request):
     return render_to_response('accounts/details.html', ctx,
         context_instance=RequestContext(request))
 
+def confirm(request, code=None):
+    up = UserProfile.objects.get(activation_code=code)
+    user = up.user
+    user.is_active = True
+    user.save()
+    messages.success(request, _('Thanks!  You may now login.'))
+    return redirect(reverse('accounts.login'))
+
 def signup(request):
     ctx = {}
     if not settings.SIGNUP_ENABLED:
@@ -64,11 +75,36 @@ def signup(request):
         password = request.POST.get('password')
         first_name = request.POST.get('first_name')
         last_name = request.POST.get('last_name')
+        username = request.POST.get('username')
         email = request.POST.get('email')
         user = User(first_name=first_name, last_name=last_name,
             email=email)
+        user.username = username
         user.set_password(password)
+        user.is_active = False
         user.save()
+        # generate code
+        code = ''.join(random.sample(string.letters+string.digits, 16))
+        up = user.get_profile()
+        up.activation_code = code
+        up.save()
+        # send welcome
+        tmpl = """Thanks for signing up!
+
+Please activate your account by clicking the following link:
+
+http://{0}{1}
+
+Please feel free to request features, submit bug reports, check the wiki, etc.
+at https://github.com/ehazlett/locksmith/wiki
+
+If you have any questions please feel free to contact us at support@vitasso.com.
+
+Thanks!
+Locksmith Team
+""".format(request.get_host(), reverse('accounts.confirm', args=[code]))
+        send_mail(_('Welcome to Locksmith!'), tmpl, settings.ADMIN_EMAIL,
+            [user.email], fail_silently=True)
         messages.success(request, _('Thanks!  Please check your email to activate.'))
         return redirect(reverse('index'))
     return render_to_response('accounts/signup.html', ctx,

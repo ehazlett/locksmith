@@ -15,6 +15,7 @@ APP_REVISION = out[:6]
 ADMINS = (
     ('Evan Hazlett', 'ejhazlett@gmail.com'),
 )
+ADMIN_EMAIL = 'support@vitasso.com'
 
 AUTH_PROFILE_MODULE = 'accounts.UserProfile'
 MANAGERS = ADMINS
