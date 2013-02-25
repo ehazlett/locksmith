@@ -308,3 +308,7 @@ div#activate {
   position: relative;
   top: 3px;
 }
+div.404 {
+  margin: 25px 0 0 0;
+  font-size: 48px;
+}
