@@ -96,7 +96,7 @@ def activate(request):
 @csrf_exempt
 def hook(request):
     event = json.loads(request.body)
-    if event.type == 'invoice.payment_succeeded':
+    if event.get('type') == 'invoice.payment_succeeded':
         customer = event.get('data', {}).get('object', {}).get('customer')
         up = UserProfile.objects.get(customer_id=customer)
         if settings.DEBUG or event.get('livemode'):
