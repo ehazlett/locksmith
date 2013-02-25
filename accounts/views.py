@@ -96,6 +96,6 @@ def activate(request):
 
 @csrf_exempt
 def hook(request):
-    event = json.parse(request.body)
+    event = json.loads(request.body)
     print(event)
     return HttpResponse(status=200)
