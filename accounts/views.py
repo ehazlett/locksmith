@@ -8,6 +8,7 @@ from django.contrib.auth import (authenticate, login as login_user,
 from django.contrib.auth.models import User
 from django.contrib import messages
 from django.conf import settings
+from django.views.decorators.csrf import csrf_exempt
 from django.utils.translation import ugettext as _
 from accounts.forms import AccountForm
 from accounts.models import UserProfile
@@ -93,6 +94,7 @@ def activate(request):
     return render_to_response('accounts/activate.html', ctx,
         context_instance=RequestContext(request))
 
+@csrf_exempt
 def hook(request):
     event = json.parse(request.body)
     print(event)
