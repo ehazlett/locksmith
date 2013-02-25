@@ -1,6 +1,6 @@
 # Locksmith
-Locksmith is a password container application.  You can enter account passwords
-and Locksmith will encrypt and store them.
+Locksmith is a password management application.  Think of it as a lightweight
+open source web based 1password or keepass.
 
 # Setup
 
@@ -9,6 +9,10 @@ and Locksmith will encrypt and store them.
 * `python manage.py migrate`
 * `python manage.py runserver`
 
-# Social Auth
-If you want to use Twitter, Google, etc. auth, you need to setup your keys in
-`settings.py`.
+# Application Settings
+
+Edit all application settings in `settings.py`.  You can also create a
+`local_settings.py` with override values.
+
+# License
+Apache License 2.0
