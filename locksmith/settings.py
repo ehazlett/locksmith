@@ -33,6 +33,10 @@ ADMIN_EMAIL = 'support@vitasso.com'
 AUTH_PROFILE_MODULE = 'accounts.UserProfile'
 MANAGERS = ADMINS
 
+BCRYPT_ENABLED = True
+BCRYPT_ROUNDS = 12
+BCRYPT_MIGRATE = True
+
 SENTRY_DSN = ''
 SIGNUP_ENABLED = True
 
@@ -288,6 +292,7 @@ INSTALLED_APPS = (
     'django_forms_bootstrap',
     'south',
     'tastypie',
+    'django_bcrypt',
     'locksmith',
     'accounts',
     'vault',

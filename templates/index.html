@@ -3,10 +3,10 @@
 
 {% block main_content %}
 <div class="welcome">
-    <div class="span8">
+    <div class="span7">
         <div class="lead slogan">{% trans 'Open Source Password Management' %}</div>
         <div class="lead">
-        {% blocktrans %}Locksmith encrypts (AES-256 bit) and stores your accounts in one place.  No longer do you need to have applications installed or files to keep track. Access them anywhere with Locksmith.{% endblocktrans %}
+        {% blocktrans %}Locksmith encrypts and stores your accounts in one place.  No longer do you need to have applications installed or files to keep track. Access them anywhere with Locksmith.{% endblocktrans %}
         </div>
         {% if SIGNUP_ENABLED %}
         <div class="join">
@@ -14,8 +14,16 @@
         </div>
         {% endif %}
     </div>
-    <div class="span2 logo pull-right hidden-phone">
+    <div class="span4 logo pull-right hidden-phone">
         <img src="{{STATIC_URL}}img/lock.png" />
+        <p class="lead">{% trans 'Features' %}</p>
+        <ul>
+            <li>{% trans 'Accounts protected with' %} <a href="http://codahale.com/how-to-safely-store-a-password/" target="_bc">bcrypt</a></li>
+            <li>{% trans 'AES 256-bit Encryption' %}</li>
+            <li>{% trans 'Unlimited credentials' %}</li>
+            <li>{% trans 'Password Generator' %}</li>
+            <li>{% trans 'User-defined credential salt' %}</li>
+        </ul>
     </div>
 </div>
 {% endblock %}

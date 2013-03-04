@@ -35,7 +35,6 @@ a:hover {
   margin: 0 auto 0 auto;
 }
 .logo {
-  margin-top: 5%;
 }
 .entypo {
   font-family: "EntypoRegular", sans-serif;
@@ -226,15 +225,6 @@ a.thumbnail > div.entypo {
   margin: 15px 0 10px 0;
   font-size: 72px;
   text-align: center;
-}
-div.welcome {
-  min-height: 250px;
-  padding: 5px 10px 15px 10px;
-  border-radius: 10px;
-  -webkit-border-radius: 10px;
-  -moz-border-radius: 10px;
-  border: 1px solid #cecece;
-  background: #fefefe;
 }
 .logo {
   margin: 32px 48px 0 0;
