@@ -38,7 +38,7 @@
             <a href="{% url vault.group uuid=group.uuid %}" class="thumbnail">
                 <div class="entypo large">&#128196;</div>
                 <div class="caption">
-                    <h3>{{group.name}}</h3>
+                    <h3>{{group.name|truncatechars:"15"}}</h3>
                 </div>
             </a>
         </li>

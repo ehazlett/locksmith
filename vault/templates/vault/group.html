@@ -120,7 +120,7 @@
             <a href="#" class="thumbnail credential" data-name="{{cred.name}}" data-uuid="{{cred.uuid}}">
                 <div class="entypo">{% if cred.url %}&#59254;{% else %}&#128274;{% endif %}</div>
                 <div class="caption">
-                    <p>{{cred.name}}</p>
+                    <p>{{cred.name|truncatechars:"15"}}</p>
                 </div>
             </a>
         </li>
