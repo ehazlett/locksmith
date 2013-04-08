@@ -9,8 +9,9 @@ Screenshots [here](https://github.com/ehazlett/locksmith/wiki/Screenshots)
 # Setup
 
 * `pip install -r requirements.txt`
-* `python manage.py syncdb`
+* `python manage.py syncdb --noinput`
 * `python manage.py migrate`
+* `python manage.py createsuperuser`
 * `python manage.py runserver`
 
 # Application Settings
