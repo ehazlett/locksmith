@@ -41,7 +41,7 @@ def index(request):
 @login_required
 def group(request, uuid=None):
     ctx = {}
-    group = CredentialGroup.objects.get(uuid=uuid)
+    group = CredentialGroup.objects.get(uuid=uuid, owner=request.user)
     ctx['group'] = group
     return render_to_response('vault/group.html', ctx,
         context_instance=RequestContext(request))
