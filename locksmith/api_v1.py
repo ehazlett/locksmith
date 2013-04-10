@@ -199,6 +199,10 @@ class CredentialResource(ModelResource):
     #        kwargs['api_name'] = self._meta.api_name
     #    return self._build_reverse_url('api_dispatch_detail', kwargs = kwargs)
 
+    def apply_authorization_limits(self, request, object_list):
+        object_list = object_list.filter(owner=request.user)
+        return object_list
+
     def dehydrate(self, bundle):
         u = bundle.request.user
         key = get_user_encryption_key(u.username)
