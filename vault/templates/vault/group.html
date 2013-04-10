@@ -181,9 +181,10 @@
             moviePath: "/static/libs/zc.swf"
         });
         clip.on('complete', function(client, args) {
+            $("#credential-status").fadeIn(100);
             $("#credential-status").text("{% trans 'Copied to clipboard...' %}");
-            $("#credential-status").delay(3000).fadeOut(100);
-            $("#credential-status").focus();
+            $("#credential-status").delay(750).fadeOut(100);
+            $("#dialog-credential").focus();
         });
         var name = $(this).attr('data-name');
         var uuid = $(this).attr('data-uuid');
@@ -220,6 +221,9 @@
                 redirect("{% url index %}");
             });
         }
+    });
+    $("#dialog-credential").on('hide', function() {
+        $("#credential-status").fadeOut(10);
     });
     $(function(){
         $("form#form-credential").validate();
