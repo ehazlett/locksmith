@@ -98,6 +98,10 @@ class UserResource(ModelResource):
             url(r"^(?P<resource_name>%s)/(?P<username>[\w\d_.-]+)/$" % self._meta.resource_name, self.wrap_view('dispatch_detail'), name="api_dispatch_detail"),
         ]
 
+    def get_object_list(self, request):
+        return super(UserResource, self).get_object_list(request).filter(
+            username=request.user.username)
+
     # only let non-admin users see their own account
     def apply_authorization_limits(self, request, object_list):
         if not request.user.is_superuser:
@@ -143,6 +147,10 @@ class CredentialGroupResource(ModelResource):
                 name="api_dispatch_detail"),
         ]
 
+    def get_object_list(self, request):
+        return super(CredentialGroupResource, self).get_object_list(request).filter(
+            owner=request.user)
+
     def apply_authorization_limits(self, request, object_list):
         if not request.user.is_superuser:
             object_list = object_list.filter(owner=request.user)
@@ -185,6 +193,10 @@ class CredentialResource(ModelResource):
                 self.wrap_view('dispatch_detail'), name="api_dispatch_detail"),
         ]
 
+    def get_object_list(self, request):
+        return super(CredentialResource, self).get_object_list(request).filter(
+            groups__owner=request.user)
+
     # this is broken in tastypie 0.9.13
     # build custom resource_uri (instead of /resource/<pk>/)
     #def get_resource_uri(self, bundle_or_obj, url_name='api_dispatch_list'):
@@ -200,8 +212,7 @@ class CredentialResource(ModelResource):
     #    return self._build_reverse_url('api_dispatch_detail', kwargs = kwargs)
 
     def apply_authorization_limits(self, request, object_list):
-        object_list = object_list.filter(owner=request.user)
-        return object_list
+        return object_list.filter(owner=request.user)
 
     def dehydrate(self, bundle):
         u = bundle.request.user
