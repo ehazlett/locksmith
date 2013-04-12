@@ -151,8 +151,14 @@
         });
     }
     $(window).bind('keypress', function(e){
-        if ( e.keyCode == 13 ) {
+        if (e.keyCode == 13) {
             e.preventDefault();
+        }
+    });
+    $("input#encryption-key").bind('keypress', function(e) {
+        if (e.keyCode == 13) {
+            e.preventDefault();
+            $("#form-key").submit();
         }
     });
     $(function(){
