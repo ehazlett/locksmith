@@ -26,6 +26,7 @@ from django.contrib.auth import authenticate, login as login_user
 from django.views.decorators.csrf import csrf_exempt
 from django.conf import settings
 from django.core.cache import cache
+from django.db.models import Q
 from vault.models import CredentialGroup, Credential
 from tastypie.models import ApiKey
 from tastypie.constants import ALL, ALL_WITH_RELATIONS
@@ -84,6 +85,70 @@ class AppAuthentication(Authentication):
                     pass
         return False
 
+class CredentialGroupAuthorization(Authorization):
+    def read_list(self, object_list, bundle):
+        return object_list.filter(Q(owner=bundle.request.user) | \
+            Q(members__in=bundle.request.user))
+
+    def read_detail(self, object_list, bundle):
+        return object_list.filter(Q(owner=bundle.request.user) | \
+            Q(members__in=[bundle.request.user]))
+
+    def create_list(self, object_list, bundle):
+        return object_list
+
+    def create_detail(self, object_list, bundle):
+        return bundle.obj.owner == bundle.request.user
+
+    def update_list(self, object_list, bundle):
+        allowed = []
+
+        # Since they may not all be saved, iterate over them.
+        for obj in object_list:
+            if obj.owner == bundle.request.user:
+                allowed.append(obj)
+        return allowed
+
+    def update_detail(self, object_list, bundle):
+        return bundle.obj.owner == bundle.request.user
+
+    def delete_list(self, object_list, bundle):
+        return bundle.obj.owner == bundle.request.user
+
+    def delete_detail(self, object_list, bundle):
+        return bundle.obj.owner == bundle.request.user
+
+class CredentialAuthorization(Authorization):
+    def read_list(self, object_list, bundle):
+        return object_list.filter(owner=bundle.request.user)
+
+    def read_detail(self, object_list, bundle):
+        return object_list.filter(owner=bundle.request.user)
+
+    def create_list(self, object_list, bundle):
+        return object_list
+
+    def create_detail(self, object_list, bundle):
+        return bundle.obj.owner == bundle.request.user
+
+    def update_list(self, object_list, bundle):
+        allowed = []
+
+        # Since they may not all be saved, iterate over them.
+        for obj in object_list:
+            if obj.owner == bundle.request.user:
+                allowed.append(obj)
+        return allowed
+
+    def update_detail(self, object_list, bundle):
+        return bundle.obj.owner == bundle.request.user
+
+    def delete_list(self, object_list, bundle):
+        return bundle.obj.owner == bundle.request.user
+
+    def delete_detail(self, object_list, bundle):
+        return bundle.obj.owner == bundle.request.user
+
 class UserResource(ModelResource):
     class Meta:
         queryset = User.objects.all()
@@ -133,7 +198,7 @@ class CredentialGroupResource(ModelResource):
         excludes = ('id', )
         #list_allowed_methods = ['get']
         authentication = AppAuthentication()
-        authorization = Authorization()
+        authorization = CredentialGroupAuthorization()
         resource_name = 'credentialgroups'
         filtering = {
             "name": ALL,
@@ -146,10 +211,6 @@ class CredentialGroupResource(ModelResource):
                 % self._meta.resource_name, self.wrap_view('dispatch_detail'),
                 name="api_dispatch_detail"),
         ]
-
-    def get_object_list(self, request):
-        return super(CredentialGroupResource, self).get_object_list(request).filter(
-            owner=request.user)
 
     def apply_authorization_limits(self, request, object_list):
         if not request.user.is_superuser:
@@ -183,7 +244,7 @@ class CredentialResource(ModelResource):
         excludes = ('id', )
         #list_allowed_methods = ['get']
         authentication = AppAuthentication()
-        authorization = Authorization()
+        authorization = CredentialAuthorization()
         resource_name = 'credentials'
         pass_request_user_to_django = True
 
@@ -192,10 +253,6 @@ class CredentialResource(ModelResource):
             url(r"^(?P<resource_name>%s)/(?P<uuid>[\w\d_.-]+)/$" % self._meta.resource_name,
                 self.wrap_view('dispatch_detail'), name="api_dispatch_detail"),
         ]
-
-    def get_object_list(self, request):
-        return super(CredentialResource, self).get_object_list(request).filter(
-            groups__owner=request.user)
 
     # this is broken in tastypie 0.9.13
     # build custom resource_uri (instead of /resource/<pk>/)
@@ -211,8 +268,8 @@ class CredentialResource(ModelResource):
     #        kwargs['api_name'] = self._meta.api_name
     #    return self._build_reverse_url('api_dispatch_detail', kwargs = kwargs)
 
-    def apply_authorization_limits(self, request, object_list):
-        return object_list.filter(owner=request.user)
+    #def apply_authorization_limits(self, request, object_list):
+    #    return object_list.filter(owner=request.user)
 
     def dehydrate(self, bundle):
         u = bundle.request.user

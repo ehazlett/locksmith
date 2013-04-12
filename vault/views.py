@@ -17,6 +17,7 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_http_methods
 from django.http import HttpResponse, Http404
 from django.utils.translation import ugettext as _
+from django.db.models import Q
 from django.core.urlresolvers import reverse
 from django.core.cache import cache
 from django.conf import settings
@@ -34,8 +35,9 @@ except ImportError:
 def index(request):
     ctx = {}
     try:
-        ctx['credential_groups'] = CredentialGroup.objects.filter(
-            owner=request.user).order_by('name')
+        groups = CredentialGroup.objects.filter(Q(owner=request.user) | \
+            Q(members__in=[request.user]))
+        ctx['credential_groups'] = groups
     except CredentialGroup.DoesNotExist:
         raise Http404()
     return render_to_response('vault/index.html', ctx,
@@ -45,7 +47,8 @@ def index(request):
 def group(request, uuid=None):
     ctx = {}
     try:
-        group = CredentialGroup.objects.get(uuid=uuid, owner=request.user)
+        group = CredentialGroup.objects.get(Q(owner=request.user) | \
+            Q(members__in=[request.user]), uuid=uuid)
         ctx['group'] = group
     except CredentialGroup.DoesNotExist:
         raise Http404()
