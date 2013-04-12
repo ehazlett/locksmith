@@ -3,6 +3,32 @@
 {% load locksmith %}
 
 {% block main_content %}
+<div id="dialog-edit-group" class="modal hide" tabindex="-1" role="dialog" aria-labelledby="dialog-key-label" aria-hidden="true">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h3 id="dialog-key-label">{% trans 'Edit Group' %}</h3>
+    </div>
+    <div class="modal-body">
+        <form id="form-group" class="form-horizontal">
+            <input type="hidden" name="uuid" value="{{group.uuid}}"/>
+            <div class="control-group">
+                 <label class="control-label" for="inputName">{% trans 'Name' %}</label>
+                 <div class="controls">
+                   <input type="text" id="inputName" name="name" class="required" value="{{group.name}}" />
+                 </div>
+            </div>
+            <div class="control-group">
+                 <label class="control-label" for="description">{% trans 'Description' %}</label>
+                 <div class="controls">
+                   <textarea id="description" name="description">{{group.description|default:""}}</textarea>
+                 </div>
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <a href="#" id="btn-save-group" class="btn btn-primary">{% trans 'Save' %}</a>
+    </div>
+</div>
 <div id="dialog-credential" class="modal hide" tabindex="-1" role="dialog" aria-labelledby="dialog-key-label" aria-hidden="true">
     <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -107,6 +133,7 @@
 </div>
 <div class="toolbar pull-right">
     <a id="btn-add-credential" href="#dialog-credential" role="button" data-toggle="modal" class="btn"><i class="icon icon-plus"></i> {% trans 'Add Credential' %}</a>
+    <a id="btn-edit-group" href="#dialog-edit-group" role="button" data-toggle="modal" class="btn btn-success"><i class="icon icon-edit"></i> {% trans 'Edit Group' %}</a>
     <a id="btn-delete-group" href="#" class="btn btn-danger"><i class="icon icon-trash icon-white"></i> {% trans 'Delete Group' %}</a>
 </div>
 <div class="group title">{{group.name}}</div>
@@ -214,6 +241,11 @@
                 redirect("{% url vault.views.group uuid=group.uuid %}");
             });
         }
+    });
+    $("a#btn-save-group").click(function() {
+        editCredentialGroup($("#form-group").serializeObject(), function(res) {
+            redirect("{% url vault.views.group uuid=group.uuid %}");
+        });
     });
     $("a#btn-delete-group").click(function() {
         if (confirm("{% trans 'Delete group?  This is irreversible.' %}")) {
