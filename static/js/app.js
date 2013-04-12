@@ -57,6 +57,21 @@ function createCredentialGroup(options, callback) {
         }
     });
 }
+function editCredentialGroup(options, callback) {
+    var data = options || {};
+    var cb = callback || function(){};
+    $.ajax({
+        url: API_URL + 'credentialgroups/' + data.uuid,
+        data: JSON.stringify(data),
+        type: "PATCH",
+        dataType: "application/json",
+        contentType: "application/json",
+        complete: function(xhr) {
+            cb(xhr);
+        }
+    });
+
+}
 function deleteCredentialGroup(uuid, callback) {
     var cb = callback || function(){};
     $.ajax({

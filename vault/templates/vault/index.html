@@ -9,12 +9,14 @@
         <h3 id="dialog-key-label">{% trans 'Add Group' %}</h3>
     </div>
     <div class="modal-body">
-        <form id="form-add-group">
+        <form id="form-add-group" class="form-horizontal">
             <div class="control-group">
                  <label class="control-label" for="inputName">{% trans 'Name' %}</label>
                  <div class="controls">
                    <input type="text" id="inputName" name="name" class="required" />
                  </div>
+            </div>
+            <div class="control-group">
                  <label class="control-label" for="description">{% trans 'Description' %}</label>
                  <div class="controls">
                    <textarea id="description" name="description"></textarea>
