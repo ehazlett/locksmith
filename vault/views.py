@@ -36,7 +36,7 @@ def index(request):
     ctx = {}
     try:
         groups = CredentialGroup.objects.filter(Q(owner=request.user) | \
-            Q(members__in=[request.user]))
+            Q(members__in=[request.user])).order_by('name')
         ctx['credential_groups'] = groups
     except CredentialGroup.DoesNotExist:
         raise Http404()
