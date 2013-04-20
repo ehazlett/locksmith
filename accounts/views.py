@@ -25,7 +25,7 @@ from django.conf import settings
 from django.core.mail import send_mail
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.translation import ugettext as _
-from accounts.forms import AccountForm
+from accounts.forms import AccountForm, UserProfileForm
 from accounts.models import UserProfile
 from datetime import datetime
 from utils import billing
@@ -61,12 +61,17 @@ def logout(request):
 def details(request):
     ctx = {}
     form = AccountForm(instance=request.user)
+    pform = UserProfileForm(instance=request.user.get_profile())
     if request.method == 'POST':
         form = AccountForm(request.POST, instance=request.user)
-        if form.is_valid():
+        pform = UserProfileForm(request.POST,
+            instance=request.user.get_profile())
+        if form.is_valid() and pform.is_valid():
             form.save()
+            pform.save()
             messages.info(request, _('Account updated.'))
     ctx['form'] = form
+    ctx['pform'] = pform
     return render_to_response('accounts/details.html', ctx,
         context_instance=RequestContext(request))
 
