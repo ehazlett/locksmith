@@ -248,6 +248,11 @@ class CredentialResource(ModelResource):
         authorization = CredentialAuthorization()
         resource_name = 'credentials'
         pass_request_user_to_django = True
+        filtering = {
+            "name": ALL,
+            "description": ALL,
+            "url": ALL,
+        }
 
     def prepend_urls(self):
         return [
