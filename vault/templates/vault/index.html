@@ -37,7 +37,7 @@
     <ul class="thumbnails">
         {% for group in credential_groups.all %}
         <li class="span3 group">
-            <a href="{% url vault.group uuid=group.uuid %}" class="thumbnail">
+            <a href="{% url "vault.group" uuid=group.uuid %}" class="thumbnail">
                 <div class="entypo large">&#128196;</div>
                 <div class="caption">
                     <h3>{{group.name|truncatechars:"15"}}</h3>
@@ -55,7 +55,7 @@
         var data = $("#form-add-group").serializeObject();
         if ($("#form-add-group").valid()) {
             createCredentialGroup(data, function(res) {
-                redirect("{% url index %}");
+                redirect("{% url "index" %}");
                 return false;
             });
         }
