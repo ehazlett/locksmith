@@ -18,7 +18,7 @@ from tastypie.utils import trailing_slash
 from tastypie.bundle import Bundle
 from tastypie import fields
 from django.core.urlresolvers import reverse
-from django.conf.urls.defaults import *
+from django.conf.urls import patterns, url, include
 from django.core.paginator import Paginator, InvalidPage
 from django.http import Http404, HttpResponse
 from django.contrib.auth.models import User

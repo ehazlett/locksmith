@@ -164,7 +164,7 @@
 {% endwith %}
 <script type="text/javascript">
     $("a#btn-generate-password").click(function() {
-        $.get("{% url vault.views.random_password %}", function(data) {
+        $.get("{% url "vault.views.random_password" %}", function(data) {
             $("#password").val(data);
         });
         return false;
@@ -193,7 +193,7 @@
         var data = $("form#form-show-credential").serializeObject();
         updateCredential(data, function(res) {
             if (res.status == 202) {
-                redirect("{% url vault.views.group group.uuid %}");
+                redirect("{% url "vault.views.group" group.uuid %}");
             }
         });
         return false;
@@ -202,7 +202,7 @@
         var uuid = $("#credential-uuid").val();
         if (confirm("{% trans 'Delete credential?  This is irreversible.' %}")) {
             deleteCredential(uuid, function(res) {
-                redirect("{% url vault.views.group group.uuid %}");
+                redirect("{% url "vault.views.group" group.uuid %}");
             });
         }
         return false;
@@ -242,19 +242,19 @@
     $("a#btn-save").click(function() {
         if ($("#form-credential").valid()) {
             createCredential($("#form-credential").serializeObject(), function(res) {
-                redirect("{% url vault.views.group uuid=group.uuid %}");
+                redirect("{% url "vault.views.group" uuid=group.uuid %}");
             });
         }
     });
     $("a#btn-save-group").click(function() {
         editCredentialGroup($("#form-group").serializeObject(), function(res) {
-            redirect("{% url vault.views.group uuid=group.uuid %}");
+            redirect("{% url "vault.views.group" uuid=group.uuid %}");
         });
     });
     $("a#btn-delete-group").click(function() {
         if (confirm("{% trans 'Delete group?  This is irreversible.' %}")) {
             deleteCredentialGroup('{{group.uuid}}', function(res) {
-                redirect("{% url index %}");
+                redirect("{% url "index" %}");
             });
         }
     });

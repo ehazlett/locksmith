@@ -37,12 +37,12 @@
             <h3 id="dialog-key-label">{% trans 'Encryption Key' %}</h3>
         </div>
         <div class="modal-body">
-            <form id="form-key" class="form-inline" action="{% url vault.views.set_key %}?next={{request.path}}" method="post">
+            <form id="form-key" class="form-inline" action="{% url "vault.views.set_key" %}?next={{request.path}}" method="post">
                 {% csrf_token %}
                 <input id="encryption-key" type="password" name="key" class="input-large search-query required" placeholder="{% trans 'key' %}..." />
             </form>
             <p class="muted">
-                {% blocktrans %}Please enter your encryption key.  This will 
+                {% blocktrans %}Please enter your encryption key.  This will
                 be stored temporarily in your current session and removed
                 when you close this tab / window or logout.  This is the only
                 way to decrypt your data.{% endblocktrans %}
@@ -77,7 +77,7 @@
           </a>
           <div class="nav-collapse">
             <ul class="nav">
-              <li><a href="{% url locksmith.views.about %}">{% trans 'about' %}</a></li>
+              <li><a href="{% url "locksmith.views.about" %}">{% trans 'about' %}</a></li>
               {% if request.user.id != None %}
               {% endif %}
             </ul>
@@ -86,21 +86,21 @@
               <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{request.user.username}} {% if request.user.get_profile.is_pro %}<span class="label label-info pro-label">{% trans 'pro' %}</span>{% endif %}<b class="caret"></b></a>
                 <ul class="dropdown-menu">
-                  <li><a href="{% url accounts.details %}">{% trans 'account' %}</a></li>
-                  <li><a href="{% url vault.views.lock_session %}?next={{request.path}}">{% trans 'lock' %}</a></li>
+                  <li><a href="{% url "accounts.details" %}">{% trans 'account' %}</a></li>
+                  <li><a href="{% url "vault.views.lock_session" %}?next={{request.path}}">{% trans 'lock' %}</a></li>
                   {% if not request.user.get_profile.is_pro %}
-                  <li><a href="{% url accounts.activate %}">{% trans 'upgrade' %}</a></li>
+                  <li><a href="{% url "accounts.activate" %}">{% trans 'upgrade' %}</a></li>
                   {% endif %}
                   {% if request.user.is_superuser %}
                   <li class="divider"></li>
                   <li><a href="/admin/">{% trans 'administration' %}</a></li>
                   {% endif %}
                   <li class="divider"></li>
-                  <li><a href="{% url accounts.views.logout %}">{% trans 'logout' %}</a></li>
+                  <li><a href="{% url "accounts.views.logout" %}">{% trans 'logout' %}</a></li>
                 </ul>
               </li>
               {% else %}
-              <li><a href="{% url accounts.views.login %}">{% trans 'login' %}</a></li>
+              <li><a href="{% url "accounts.views.login" %}">{% trans 'login' %}</a></li>
               {% endif %}
             </ul>
           </div>
@@ -144,7 +144,7 @@
         return false;
     });
     function checkSession() {
-        $.getJSON("{% url vault.views.check_session %}", function(data) {
+        $.getJSON("{% url "vault.views.check_session" %}", function(data) {
             if (data.status == false) {
                 redirect("{{request.path}}");
             }
